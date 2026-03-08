@@ -1,0 +1,45 @@
+// Wishlist Store
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { WishlistItem } from '../types/wishlist.types';
+import { Product } from '@/features/products/types/product.types';
+
+interface WishlistState {
+  items: WishlistItem[];
+  addItem: (product: Product) => void;
+  removeItem: (productId: string) => void;
+  isInWishlist: (productId: string) => boolean;
+}
+
+export const useWishlistStore = create<WishlistState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+
+      addItem: (product) => {
+        const items = get().items;
+        if (!items.find((item) => item.product.id === product.id)) {
+          const newItem: WishlistItem = {
+            id: crypto.randomUUID(),
+            product,
+            addedAt: new Date().toISOString(),
+          };
+          set({ items: [...items, newItem] });
+        }
+      },
+
+      removeItem: (productId) => {
+        const items = get().items.filter((item) => item.product.id !== productId);
+        set({ items });
+      },
+
+      isInWishlist: (productId) => {
+        return !!get().items.find((item) => item.product.id === productId);
+      },
+    }),
+    {
+      name: 'wishlist-storage',
+    }
+  )
+);
+
