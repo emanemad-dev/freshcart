@@ -1,6 +1,7 @@
 // Product Types
 export interface Product {
   _id: string;
+  id?: string; // For cart compatibility
   title: string;
   slug: string;
   description: string;
@@ -8,6 +9,8 @@ export interface Product {
   priceAfterDiscount?: number;
   imageCover: string;
   images: string[];
+  image?: string; // For cart compatibility
+  name?: string; // For cart compatibility
   category: {
     _id: string;
     name: string;

@@ -36,7 +36,7 @@ export const ProductDetails = ({ product, onAddToCart, onAddToWishlist }: Produc
           </Button>
         </div>
         <div className="text-sm text-gray-500">
-          <p>Stock: {product.stock}</p>
+          <p>Stock: {product.quantity}</p>
         </div>
       </div>
     </div>

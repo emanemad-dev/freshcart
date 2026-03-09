@@ -18,7 +18,9 @@ export const useWishlistStore = create<WishlistState>()(
 
       addItem: (product) => {
         const items = get().items;
-        if (!items.find((item) => item.product.id === product.id)) {
+        // Use _id as the primary identifier, fallback to id
+        const productId = product._id || product.id;
+        if (!items.find((item) => item.product._id === productId || item.product.id === productId)) {
           const newItem: WishlistItem = {
             id: crypto.randomUUID(),
             product,
@@ -29,12 +31,12 @@ export const useWishlistStore = create<WishlistState>()(
       },
 
       removeItem: (productId) => {
-        const items = get().items.filter((item) => item.product.id !== productId);
+        const items = get().items.filter((item) => item.product._id !== productId && item.product.id !== productId);
         set({ items });
       },
 
       isInWishlist: (productId) => {
-        return !!get().items.find((item) => item.product.id === productId);
+        return !!get().items.find((item) => item.product._id === productId || item.product.id === productId);
       },
     }),
     {

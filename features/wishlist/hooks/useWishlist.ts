@@ -25,8 +25,9 @@ export const useWishlist = () => {
   };
 
   const toggle = (product: Product) => {
-    if (isInWishlist(product.id)) {
-      remove(product.id);
+    const productId = product._id || product.id || '';
+    if (isInWishlist(productId)) {
+      remove(productId);
     } else {
       add(product);
     }

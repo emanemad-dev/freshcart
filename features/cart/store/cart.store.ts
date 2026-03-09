@@ -20,11 +20,13 @@ export const useCartStore = create<CartState>()(
 
       addItem: (product, quantity = 1) => {
         const items = get().items;
-        const existingItem = items.find((item) => item.product.id === product.id);
+        // Use _id as the primary identifier, fallback to id
+        const productId = product._id || product.id;
+        const existingItem = items.find((item) => item.product._id === productId || item.product.id === productId);
 
         if (existingItem) {
           const updatedItems = items.map((item) =>
-            item.product.id === product.id
+            item.product._id === productId || item.product.id === productId
               ? { ...item, quantity: item.quantity + quantity }
               : item
           );
@@ -40,13 +42,13 @@ export const useCartStore = create<CartState>()(
       },
 
       removeItem: (productId) => {
-        const items = get().items.filter((item) => item.product.id !== productId);
+        const items = get().items.filter((item) => item.product._id !== productId && item.product.id !== productId);
         set({ items, total: get().getTotal() });
       },
 
       updateQuantity: (productId, quantity) => {
         const items = get().items.map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item
+          item.product._id === productId || item.product.id === productId ? { ...item, quantity } : item
         );
         set({ items, total: get().getTotal() });
       },
