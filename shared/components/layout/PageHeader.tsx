@@ -46,15 +46,19 @@ export function PageHeader({
             ))}
           </nav>
         )}
-        <div className="flex flex-col">
-          <div className="flex items-center gap-3">
-            {icon && <span className="text-white text-3xl">{icon}</span>}
-            <h1 className="text-3xl font-bold text-white">{title}</h1>
-          </div>
-          {description && (
-            <p className="text-white/80 text-lg mt-1">{description}</p>
-          )}
-        </div>
+  <div className="flex items-start gap-4">
+  {icon && (
+    <div className="flex items-center justify-center bg-white/20 p-4 rounded-xl" style={{ minHeight: '4.5rem' }}>
+      <span className="text-white text-3xl">{icon}</span>
+    </div>
+  )}
+  <div className="flex flex-col">
+    <h1 className="text-3xl font-bold text-white">{title}</h1>
+    {description && (
+      <p className="text-white/80 text-lg mt-1">{description}</p>
+    )}
+  </div>
+</div>
       </div>
     </div>
   );

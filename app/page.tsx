@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/Button";
 import { ProductCard } from "@/features/products/components/ProductCard";
+import { NewsletterSection } from "@/shared/components/layout/NewsletterSection";
 
 export default function Home() {
   const [categories, setCategories] = React.useState([]);
@@ -99,6 +100,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Newsletter & Mobile App Section */}
+      <NewsletterSection />
 
     </div>
   );
