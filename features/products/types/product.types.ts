@@ -1,13 +1,29 @@
 // Product Types
 export interface Product {
-  id: string;
-  name: string;
+  _id: string;
+  title: string;
+  slug: string;
   description: string;
   price: number;
-  image: string;
-  categoryId: string;
-  brandId: string;
-  stock: number;
+  priceAfterDiscount?: number;
+  imageCover: string;
+  images: string[];
+  category: {
+    _id: string;
+    name: string;
+    slug: string;
+    image: string;
+  };
+  brand?: {
+    _id: string;
+    name: string;
+    slug: string;
+    image: string;
+  };
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  quantity: number;
+  sold?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,9 +39,13 @@ export interface ProductListParams {
 }
 
 export interface ProductListResponse {
-  products: Product[];
-  total: number;
-  page: number;
-  limit: number;
+  results: number;
+  metadata: {
+    currentPage: number;
+    numberOfPages: number;
+    limit: number;
+    nextPage?: number;
+  };
+  data: Product[];
 }
 

@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/shared/components/ui/Button';
 import { Input } from '@/shared/components/ui/Input';
@@ -12,19 +11,24 @@ import { useAuthStore } from '../store/auth.store';
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
   const { setAuth } = useAuthStore();
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: { email: string; password: string }) =>
-      authService.login(credentials),
-    onSuccess: (data) => {
-      setAuth(data.user, data.token);
-      router.push('/');
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      console.log('Logging in with:', credentials);
+      const response = await authService.login(credentials);
+      console.log('Login response:', response);
+      return response;
     },
-    onError: (error) => {
-      console.error('Login failed:', error);
-      alert('Login failed. Please check your credentials.');
+    onSuccess: (data) => {
+      console.log('Login success, data:', data);
+      setAuth(data.user, data.token);
+      window.location.href = '/';
+    },
+    onError: (error: any) => {
+      console.error('Login error:', error);
+      const message = error?.response?.data?.message || 'Login failed. Please check your credentials.';
+      alert(message);
     },
   });
 

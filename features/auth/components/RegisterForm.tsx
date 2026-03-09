@@ -22,7 +22,7 @@ export const RegisterForm = () => {
       authService.register(data),
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      router.push('/');
+      window.location.href = '/';
     },
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Registration failed. Please try again.';

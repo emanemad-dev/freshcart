@@ -34,9 +34,9 @@ export default function ProductsPage() {
           className="w-full max-w-md px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      {data?.products && (
+      {data?.data && (
         <ProductGrid
-          products={data.products}
+          products={data.data}
           onAddToCart={addToCart}
           onAddToWishlist={addToWishlist}
         />

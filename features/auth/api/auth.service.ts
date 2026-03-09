@@ -4,13 +4,13 @@ import { LoginCredentials, RegisterData, AuthResponse } from '../types/auth.type
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await axios.post('/api/v1/auth/login', credentials);
-    return response.data.data;
+    const response = await axios.post('/api/v1/auth/signin', credentials);
+    return response.data;
   },
 
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await axios.post('/api/v1/auth/signup', data);
-    return response.data.data;
+    return response.data;
   },
 
   async logout(): Promise<void> {
@@ -19,7 +19,7 @@ export const authService = {
 
   async getCurrentUser(): Promise<AuthResponse> {
     const response = await axios.get('/api/v1/auth/me');
-    return response.data.data;
+    return response.data;
   },
 };
 

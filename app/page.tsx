@@ -1,8 +1,41 @@
+"use client";
 // Home Page
+import React from "react";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/Button";
+import { ProductCard } from "@/features/products/components/ProductCard";
+import { FeaturesSection } from "@/shared/components/layout/FeaturesSection";
 
 export default function Home() {
+  const [categories, setCategories] = React.useState([]);
+  const [products, setProducts] = React.useState([]);
+
+  React.useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('https://ecommerce.routemisr.com/api/v1/categories');
+        const json = await res.json();
+        setCategories(json.data || []);
+      } catch (err) {
+        setCategories([]);
+      }
+    }
+    fetchCategories();
+  }, []);
+
+  React.useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch('https://ecommerce.routemisr.com/api/v1/products?limit=8');
+        const json = await res.json();
+        setProducts(json.data || []);
+      } catch (err) {
+        setProducts([]);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
@@ -28,7 +61,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="py-16 bg-gray-50 w-full">
         <div className="container mx-auto px-4">
@@ -52,24 +84,45 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* Featured Products Section */}
+      <section className="py-16 w-full">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Featured Products</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {products.length === 0 ? (
+              <div className="col-span-4 text-center text-gray-500">No products found.</div>
+            ) : (
+              products.map((product: any) => (
+                <ProductCard key={product._id} product={product} />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Categories Preview */}
       <section className="py-16 w-full">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Electronics', 'Clothing', 'Home & Garden', 'Sports'].map((category) => (
-              <Link
-                key={category}
-                href="/categories"
-                className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow text-center"
-              >
-                <h3 className="font-semibold">{category}</h3>
-              </Link>
-            ))}
+            {categories.length === 0 ? (
+              <div className="col-span-4 text-center text-gray-500">No categories found.</div>
+            ) : (
+              categories.map((category: any) => (
+                <Link
+                  key={category._id}
+                  href={`/categories/${category.slug}`}
+                  className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow text-center"
+                >
+                  <img src={category.image} alt={category.name} className="mx-auto mb-4 h-16 w-16 object-cover rounded-full" />
+                  <h3 className="font-semibold">{category.name}</h3>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>
+
     </div>
   );
 }

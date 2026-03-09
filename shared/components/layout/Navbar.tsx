@@ -14,6 +14,7 @@ export const Navbar = () => {
   { href: '/products', label: 'Products' },
   { href: '/categories', label: 'Categories' },
   { href: '/brands', label: 'Brands' },
+  { href: '/contact', label: 'Contact' },
   { href: '/cart', label: 'Cart' },
   { href: '/wishlist', label: 'Wishlist' },
   { href: '/orders', label: 'Orders' },

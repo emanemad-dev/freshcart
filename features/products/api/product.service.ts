@@ -2,11 +2,15 @@
 import { axios } from '@/shared/lib/axios';
 import { Product, ProductListParams, ProductListResponse } from '../types/product.types';
 
-console.log('Product Service Loaded');
-
 export const productService = {
   async getProducts(params?: ProductListParams): Promise<ProductListResponse> {
-    const response = await axios.get('/api/v1/products', { params });
+    // Filter out empty params
+    const cleanParams: Record<string, string> = {};
+    if (params?.search) {
+      cleanParams.search = params.search;
+    }
+    
+    const response = await axios.get('/api/v1/products', { params: cleanParams });
     return response.data;
   },
 
