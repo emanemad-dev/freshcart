@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { BiPhone, BiEnvelope, BiMap, BiTime } from 'react-icons/bi';
-import { FaTwitter, FaInstagram, FaYoutube, FaFacebook } from 'react-icons/fa';
+import { FaTwitter, FaInstagram, FaYoutube, FaFacebook, FaHeadphonesAlt } from 'react-icons/fa';
 import { Input } from '@/shared/components/ui/Input';
 import { Button } from '@/shared/components/ui/Button';
 import { PageHeader } from '@/shared/components/layout/PageHeader';
@@ -71,6 +71,8 @@ export default function ContactPage() {
         breadcrumbs={[{ label: 'Contact' }]}
         title="Contact Us"
         description="Have a question or need help? We'd love to hear from you."
+        icon={<FaHeadphonesAlt />}
+        backgroundColor="bg-blue-600"
       />
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

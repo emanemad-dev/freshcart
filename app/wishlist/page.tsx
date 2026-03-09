@@ -6,6 +6,7 @@ import { useWishlist } from '@/features/wishlist/hooks/useWishlist';
 import { WishlistItem } from '@/features/wishlist/components/WishlistItem';
 import { useCart } from '@/features/cart/hooks/useCart';
 import { PageHeader } from '@/shared/components/layout/PageHeader';
+import { FaHeart } from 'react-icons/fa';
 
 export default function WishlistPage() {
   const { items, remove } = useWishlist();
@@ -17,6 +18,7 @@ export default function WishlistPage() {
         <PageHeader 
           breadcrumbs={[{ label: 'Wishlist' }]}
           title="My Wishlist"
+          icon={<FaHeart />}
         />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
@@ -36,6 +38,7 @@ export default function WishlistPage() {
         breadcrumbs={[{ label: 'Wishlist' }]}
         title="My Wishlist"
         description={`${items.length} items in your wishlist`}
+        icon={<FaHeart />}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">

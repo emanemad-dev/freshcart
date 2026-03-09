@@ -5,6 +5,7 @@ import { useOrders } from '@/features/orders/hooks/useOrders';
 import { OrderCard } from '@/features/orders/components/OrderCard';
 import { Loader } from '@/shared/components/ui/Loader';
 import { PageHeader } from '@/shared/components/layout/PageHeader';
+import { FaBox } from 'react-icons/fa';
 
 export default function OrdersPage() {
   const { data, isLoading } = useOrders();
@@ -23,6 +24,7 @@ export default function OrdersPage() {
         breadcrumbs={[{ label: 'Orders' }]}
         title="My Orders"
         description="Track and manage your orders"
+        icon={<FaBox />}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">

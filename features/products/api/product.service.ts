@@ -9,6 +9,12 @@ export const productService = {
     if (params?.search) {
       cleanParams.search = params.search;
     }
+    if (params?.categoryId) {
+      cleanParams.category = params.categoryId;
+    }
+    if (params?.brandId) {
+      cleanParams.brand = params.brandId;
+    }
     
     const response = await axios.get('/api/v1/products', { params: cleanParams });
     return response.data;

@@ -3,6 +3,7 @@
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { PageHeader } from '@/shared/components/layout/PageHeader';
+import { FaUser } from 'react-icons/fa';
 
 export default function ProfilePage() {
   const { user, isAuthenticated } = useAuth();
@@ -13,6 +14,7 @@ export default function ProfilePage() {
         <PageHeader 
           breadcrumbs={[{ label: 'Profile' }]}
           title="My Profile"
+          icon={<FaUser />}
         />
         <div className="container mx-auto px-4 py-8">
           <p>Please login to view your profile</p>
@@ -27,6 +29,7 @@ export default function ProfilePage() {
         breadcrumbs={[{ label: 'Profile' }]}
         title="My Profile"
         description="Manage your account settings"
+        icon={<FaUser />}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white p-6 rounded-lg shadow-sm border">

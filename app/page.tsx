@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/Button";
 import { ProductCard } from "@/features/products/components/ProductCard";
-import { FeaturesSection } from "@/shared/components/layout/FeaturesSection";
 
 export default function Home() {
   const [categories, setCategories] = React.useState([]);
@@ -61,29 +60,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50 w-full">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose FreshCart?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="text-4xl mb-4">🚚</div>
-              <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
-              <p className="text-gray-600">Get your orders delivered to your doorstep quickly</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-semibold mb-2">Quality Products</h3>
-              <p className="text-gray-600">We ensure the highest quality for all our products</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="text-4xl mb-4">💰</div>
-              <h3 className="text-xl font-semibold mb-2">Great Prices</h3>
-              <p className="text-gray-600">Competitive prices on all your favorite items</p>
-            </div>
-          </div>
-        </div>
-      </section>
+
       {/* Featured Products Section */}
       <section className="py-16 w-full">
         <div className="container mx-auto px-4">

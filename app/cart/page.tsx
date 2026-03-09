@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/features/cart/hooks/useCart';
 import { CartItem } from '@/features/cart/components/CartItem';
 import { PageHeader } from '@/shared/components/layout/PageHeader';
+import { FaShoppingCart } from 'react-icons/fa';
 
 export default function CartPage() {
   const { items, total, remove, update, clear } = useCart();
@@ -17,6 +18,7 @@ export default function CartPage() {
             { label: 'Cart' }
           ]}
           title="Shopping Cart"
+          icon={<FaShoppingCart />}
         />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
@@ -37,6 +39,7 @@ export default function CartPage() {
           { label: 'Cart' }
         ]}
         title="Shopping Cart"
+        icon={<FaShoppingCart />}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
