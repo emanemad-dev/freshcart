@@ -1,91 +1,110 @@
 // Cart Item Component
+import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { CartItem as CartItemType } from '../types/cart.types';
-import { Button } from '@/shared/components/ui/Button';
+import { Product } from '@/features/products/types/product.types';
+import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+
+// Extended type to handle both local cart items and server cart items
+interface ExtendedCartItem {
+  id?: string;
+  product: Product & { category?: { name: string } };
+  quantity?: number;
+  count?: number;
+}
 
 interface CartItemProps {
-  item: CartItemType;
+  item: ExtendedCartItem;
   onUpdateQuantity?: (productId: string, quantity: number) => void;
   onRemove?: (productId: string) => void;
 }
 
-export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
+export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps): React.ReactElement => {
   // Handle both 'image' and 'imageCover' properties for compatibility
   const productImage = item.product.imageCover || item.product.image || null;
   // Handle both 'id' and '_id' properties
-  const productId = item.product.id || item.product._id || '';
+  const productId = item.product.id || item.product._id || item.id || '';
   // Handle both 'name' and 'title' properties
   const productName = item.product.name || item.product.title || 'Unnamed Product';
-
-  if (!productImage) {
-    return (
-      <div className="flex gap-4 p-4 border-b">
-        <div className="relative h-24 w-24 flex-shrink-0 bg-gray-200 rounded flex items-center justify-center">
-          <span className="text-gray-400 text-xs">No Image</span>
-        </div>
-        <div className="flex-1">
-          <h3 className="font-semibold">{productName}</h3>
-          <p className="text-gray-600">${item.product.price}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <button
-              onClick={() => onUpdateQuantity?.(productId, Math.max(1, item.quantity - 1))}
-              className="px-2 py-1 border rounded"
-            >
-              -
-            </button>
-            <span>{item.quantity}</span>
-            <button
-              onClick={() => onUpdateQuantity?.(productId, item.quantity + 1)}
-              className="px-2 py-1 border rounded"
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-col items-end justify-between">
-          <p className="font-semibold">${item.product.price * item.quantity}</p>
-          <Button variant="outline" size="sm" onClick={() => onRemove?.(productId)}>
-            Remove
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Handle both 'quantity' and 'count' properties
+  const quantity = item.quantity || item.count || 1;
 
   return (
-    <div className="flex gap-4 p-4 border-b">
-      <div className="relative h-24 w-24 flex-shrink-0">
-        <Image
-          src={productImage}
-          alt={productName}
-          fill
-          className="object-cover rounded"
-        />
-      </div>
-      <div className="flex-1">
-        <h3 className="font-semibold">{productName}</h3>
-        <p className="text-gray-600">${item.product.price}</p>
-        <div className="flex items-center gap-2 mt-2">
-          <button
-            onClick={() => onUpdateQuantity?.(productId, Math.max(1, item.quantity - 1))}
-            className="px-2 py-1 border rounded"
-          >
-            -
-          </button>
-          <span>{item.quantity}</span>
-          <button
-            onClick={() => onUpdateQuantity?.(productId, item.quantity + 1)}
-            className="px-2 py-1 border rounded"
-          >
-            +
-          </button>
+    <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-4 hover:shadow-lg transition-shadow duration-300">
+      <div className="flex gap-4">
+        {/* Product Image */}
+        <div className="relative h-28 w-28 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden">
+          {productImage ? (
+            <Image
+              src={productImage}
+              alt={productName}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-gray-400 text-xs">
+              No Image
+            </div>
+          )}
         </div>
-      </div>
-      <div className="flex flex-col items-end justify-between">
-        <p className="font-semibold">${item.product.price * item.quantity}</p>
-        <Button variant="outline" size="sm" onClick={() => onRemove?.(productId)}>
-          Remove
-        </Button>
+
+        {/* Product Details */}
+        <div className="flex-1 flex flex-col justify-between">
+          <div>
+            <Link 
+              href={`/products/${productId}`}
+              className="font-semibold text-gray-800 hover:text-green-600 transition-colors line-clamp-2"
+            >
+              {productName}
+            </Link>
+            <p className="text-sm text-gray-500 mt-1">
+              {item.product.category?.name || 'Category'}
+            </p>
+          </div>
+
+          {/* Price & Quantity */}
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-green-600">
+                {item.product.price * quantity} EGP
+              </span>
+              {item.product.priceAfterDiscount && (
+                <span className="text-sm text-gray-400 line-through">
+                  {item.product.priceAfterDiscount * quantity} EGP
+                </span>
+              )}
+            </div>
+
+            {/* Quantity Controls */}
+            <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-2 py-1">
+              <button
+                onClick={() => onUpdateQuantity?.(productId, Math.max(1, quantity - 1))}
+                className="p-1 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                aria-label="Decrease quantity"
+              >
+                <FaMinus className="w-3 h-3" />
+              </button>
+              <span className="w-8 text-center font-medium">{quantity}</span>
+              <button
+                onClick={() => onUpdateQuantity?.(productId, quantity + 1)}
+                className="p-1 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                aria-label="Increase quantity"
+              >
+                <FaPlus className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Remove Button */}
+        <button
+          onClick={() => onRemove?.(productId)}
+          className="self-start p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          aria-label="Remove item"
+        >
+          <FaTrash className="w-5 h-5" />
+        </button>
       </div>
     </div>
   );

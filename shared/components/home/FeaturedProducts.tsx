@@ -1,52 +1,52 @@
 "use client";
 
 import React from "react";
-import { ProductCard } from "@/features/products/components/ProductCard";
-import { Product } from "@/features/products/types/product.types";
+import { useProducts } from "@/features/products/hooks/useProducts";
+import { useCart } from "@/features/cart/hooks/useCart";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import { ProductGrid } from "@/features/products/components/ProductGrid";
 
 export function FeaturedProducts() {
-  const [products, setProducts] = React.useState<Product[]>([]);
+  const { data, isLoading, error } = useProducts();
+  const { add: addToCart } = useCart();
+  const { add: addToWishlist } = useWishlist();
 
-  React.useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch(
-          "https://ecommerce.routemisr.com/api/v1/products?limit=8",
-        );
-        const json = await res.json();
-        setProducts(json.data || []);
-      } catch (err) {
-        setProducts([]);
-      }
-    }
-    fetchProducts();
-  }, []);
-
-  return (
-    <section className="py-16 w-full">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-left mb-12 flex items-center gap-4">
-          <span className="h-12 w-1.5 bg-gradient-to-b from-green-500 to-green-700 rounded-sm"></span>
-          <span>
-            Featured{" "}
-            <span className="bg-gradient-to-r from-green-500 to-green-700 bg-clip-text text-transparent">
-              Products
-            </span>
-          </span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {products.length === 0 ? (
-            <div className="col-span-4 text-center text-gray-500">
-              No products found.
-            </div>
-          ) : (
-            products.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))
-          )}
+  if (isLoading) {
+    return (
+      <div className="py-16 w-full">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12">All Products</h2>
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          </div>
         </div>
       </div>
-    </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-16 w-full">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12">All Products</h2>
+          <div className="text-center text-gray-500 py-12">Unable to load products. Please try again later.</div>
+        </div>
+      </div>
+    );
+  }
+
+  const products = data?.data || [];
+
+  return (
+    <div className="py-16 w-full">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold mb-12">All Products</h2>
+        {products.length === 0 ? (
+          <div className="text-center text-gray-500 py-12">No products found.</div>
+        ) : (
+          <ProductGrid products={products} onAddToCart={addToCart} onAddToWishlist={addToWishlist} />
+        )}
+      </div>
+    </div>
   );
 }
-

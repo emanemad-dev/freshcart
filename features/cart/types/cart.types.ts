@@ -8,7 +8,12 @@ export interface CartItem {
 }
 
 export interface Cart {
-  items: CartItem[];
-  total: number;
+  products: Array<{
+    count: number;
+    price: number;
+    product: Product;
+  }>;
+  totalCartPrice: number;
+  _id?: string;
 }
 

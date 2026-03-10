@@ -183,6 +183,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useCategories } from "@/features/categories/hooks/useCategories";
 import { useProducts } from "@/features/products/hooks/useProducts";
+import { useCart } from "@/features/cart/hooks/useCart";
 import { useState } from "react";
 import {
   FaSearch,
@@ -200,6 +201,7 @@ export const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuthStore();
   const { data: categories } = useCategories();
   const { data: productsData } = useProducts({ limit: 1000 });
+  const { cartCount } = useCart();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -294,9 +296,11 @@ export const Navbar = () => {
             {/* Icons */}
             <Link href="/cart" className="relative">
               <FaShoppingCart className="text-gray-600 hover:text-green-500" />
-              <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             <Link href="/wishlist">

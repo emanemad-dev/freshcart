@@ -4,7 +4,9 @@ import { persist } from 'zustand/middleware';
 import { CartItem, Cart } from '../types/cart.types';
 import { Product } from '@/features/products/types/product.types';
 
-interface CartState extends Cart {
+interface CartState {
+  items: CartItem[];
+  total: number;
   addItem: (product: Product, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -20,7 +22,6 @@ export const useCartStore = create<CartState>()(
 
       addItem: (product, quantity = 1) => {
         const items = get().items;
-        // Use _id as the primary identifier, fallback to id
         const productId = product._id || product.id;
         const existingItem = items.find((item) => item.product._id === productId || item.product.id === productId);
 
