@@ -195,7 +195,7 @@
 //   );
 // };
 
-import Link from 'next/link';
+import Link from "next/link";
 import {
   FaCcVisa,
   FaCcMastercard,
@@ -204,8 +204,8 @@ import {
   FaTwitter,
   FaInstagram,
   FaYoutube,
-} from 'react-icons/fa';
-import { BiPhone, BiEnvelope, BiMap } from 'react-icons/bi';
+} from "react-icons/fa";
+import { BiPhone, BiEnvelope, BiMap } from "react-icons/bi";
 
 const FooterColumn = ({
   title,
@@ -220,7 +220,13 @@ const FooterColumn = ({
   </div>
 );
 
-const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+const FooterLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => (
   <li>
     <Link
       href={href}
@@ -238,7 +244,15 @@ const ContactItem = ({ icon: Icon, text }: { icon: any; text: string }) => (
   </p>
 );
 
-const SocialIcon = ({ Icon, href, label }: { Icon: any; href: string; label: string }) => (
+const SocialIcon = ({
+  Icon,
+  href,
+  label,
+}: {
+  Icon: any;
+  href: string;
+  label: string;
+}) => (
   <Link
     href={href}
     target="_blank"
@@ -261,52 +275,68 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const shopLinks = [
-    { href: '/products', label: 'All Products' },
-    { href: '/categories', label: 'Categories' },
-    { href: '/brands', label: 'Brands' },
-    { href: '/category/electronics', label: 'Electronics' },
-    { href: '/category/mens-fashion', label: "Men's Fashion" },
-    { href: '/category/womens-fashion', label: "Women's Fashion" },
+    { href: "/products", label: "All Products" },
+    { href: "/categories", label: "Categories" },
+    { href: "/brands", label: "Brands" },
+    { href: "/category/electronics", label: "Electronics" },
+    { href: "/category/mens-fashion", label: "Men's Fashion" },
+    { href: "/category/womens-fashion", label: "Women's Fashion" },
   ];
 
   const accountLinks = [
-    { href: '/profile/orders', label: 'Order History' },
-    { href: '/wishlist', label: 'Wishlist' },
-    { href: '/cart', label: 'Shopping Cart' },
-    { href: '/login', label: 'Sign In' },
-    { href: '/register', label: 'Create Account' },
+    { href: "/profile/orders", label: "Order History" },
+    { href: "/wishlist", label: "Wishlist" },
+    { href: "/cart", label: "Shopping Cart" },
+    { href: "/login", label: "Sign In" },
+    { href: "/register", label: "Create Account" },
   ];
 
   const supportLinks = [
-    { href: '/help', label: 'Help Center' },
-    { href: '/shipping-info', label: 'Shipping Info' },
-    { href: '/returns', label: 'Returns & Refunds' },
-    { href: '/track-order', label: 'Track Order' },
+    { href: "/help", label: "Help Center" },
+    { href: "/shipping-info", label: "Shipping Info" },
+    { href: "/returns", label: "Returns & Refunds" },
+    { href: "/track-order", label: "Track Order" },
   ];
 
   const legalLinks = [
-    { href: '/privacy', label: 'Privacy Policy' },
-    { href: '/terms', label: 'Terms of Service' },
-    { href: '/cookies', label: 'Cookie Policy' },
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms of Service" },
+    { href: "/cookies", label: "Cookie Policy" },
   ];
 
   const contactInfo = [
-    { icon: BiPhone, text: '+1 (800) 123-4567' },
-    { icon: BiEnvelope, text: 'support@freshcart.com' },
-    { icon: BiMap, text: '123 Commerce Street, New York, NY 10001' },
+    { icon: BiPhone, text: "+1 (800) 123-4567" },
+    { icon: BiEnvelope, text: "support@freshcart.com" },
+    { icon: BiMap, text: "123 Commerce Street, New York, NY 10001" },
   ];
 
   const socialIcons = [
-    { Icon: FaTwitter, href: 'https://twitter.com/freshcart', label: 'Twitter' },
-    { Icon: FaInstagram, href: 'https://instagram.com/freshcart', label: 'Instagram' },
-    { Icon: FaYoutube, href: 'https://youtube.com/freshcart', label: 'YouTube' },
-    { Icon: FaFacebookF, href: 'https://facebook.com/freshcart', label: 'Facebook' },
+    {
+      Icon: FaTwitter,
+      href: "https://twitter.com/freshcart",
+      label: "Twitter",
+    },
+    {
+      Icon: FaInstagram,
+      href: "https://instagram.com/freshcart",
+      label: "Instagram",
+    },
+    {
+      Icon: FaYoutube,
+      href: "https://youtube.com/freshcart",
+      label: "YouTube",
+    },
+    {
+      Icon: FaFacebookF,
+      href: "https://facebook.com/freshcart",
+      label: "Facebook",
+    },
   ];
 
   const paymentIcons = [
-    { Icon: FaCcVisa, label: 'Visa' },
-    { Icon: FaCcMastercard, label: 'Mastercard' },
-    { Icon: FaPaypal, label: 'PayPal' },
+    { Icon: FaCcVisa, label: "Visa" },
+    { Icon: FaCcMastercard, label: "Mastercard" },
+    { Icon: FaPaypal, label: "PayPal" },
   ];
 
   return (
@@ -316,12 +346,18 @@ export const Footer = () => {
           {/* Brand & Contact */}
           <div className="sm:col-span-2 lg:col-span-4 space-y-4">
             {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="FreshCart Logo" className="w-8 h-8 object-contain" />
-          <span className="text-2xl font-bold text-primary">FreshCart</span>
-        </Link>
+            <Link href="/" className="flex items-center gap-2">
+              <img
+                src="/logo.png"
+                alt="FreshCart Logo"
+                className="w-8 h-8 object-contain"
+              />
+              <span className="text-2xl font-bold text-primary">FreshCart</span>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
-              FreshCart is your one-stop destination for quality products. From fashion to electronics, we bring you the best brands at competitive prices.
+              FreshCart is your one-stop destination for quality products. From
+              fashion to electronics, we bring you the best brands at
+              competitive prices.
             </p>
 
             <div className="space-y-3 pt-4">
@@ -332,7 +368,12 @@ export const Footer = () => {
 
             <div className="flex items-center gap-3 pt-4">
               {socialIcons.map((item, idx) => (
-                <SocialIcon key={idx} Icon={item.Icon} href={item.href} label={item.label} />
+                <SocialIcon
+                  key={idx}
+                  Icon={item.Icon}
+                  href={item.href}
+                  label={item.label}
+                />
               ))}
             </div>
           </div>

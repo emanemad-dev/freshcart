@@ -34,9 +34,7 @@ export default function RootLayout({
       >
         <AppProviders>
           <Navbar />
-          <main className="min-h-screen pt-24 md:pt-16 ">
-            {children}
-          </main>
+          <main className="min-h-screen pt-24 md:pt-16 ">{children}</main>
           <FeaturesSection />
           <Footer />
         </AppProviders>
@@ -44,4 +42,3 @@ export default function RootLayout({
     </html>
   );
 }
-

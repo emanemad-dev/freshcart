@@ -1,4 +1,3 @@
-
 import {
   BiSolidTruck,
   BiRotateLeft,
@@ -35,11 +34,9 @@ export function FeatureSection() {
   ];
 
   return (
-    <section >
+    <section>
       <div className="max-w-7xl mx-auto px-4">
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
           {features.map((feature, idx) => {
             const Icon = feature.icon;
 
@@ -60,16 +57,12 @@ export function FeatureSection() {
                   <h3 className="font-semibold text-gray-900">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-gray-500">
-                    {feature.desc}
-                  </p>
+                  <p className="text-sm text-gray-500">{feature.desc}</p>
                 </div>
               </div>
             );
           })}
-
         </div>
-
       </div>
     </section>
   );
