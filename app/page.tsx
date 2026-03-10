@@ -117,6 +117,7 @@ export default function Home() {
       </section>
 
       {/* Categories Preview */}
+            {/* Categories Preview */}
       <section className="py-16 w-full bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-left mb-12 flex items-center gap-4">
