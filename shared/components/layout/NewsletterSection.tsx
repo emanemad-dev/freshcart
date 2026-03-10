@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import { FaApple, FaGooglePlay } from "react-icons/fa";

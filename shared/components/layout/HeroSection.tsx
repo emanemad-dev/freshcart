@@ -5,7 +5,7 @@ import { Button } from "@/shared/components/ui/Button";
 
 export function HeroSection() {
   return (
-    <section className="w-full bg-gradient-to-r from-green-600 to-green-800 text-white py-20 relative overflow-hidden">
+    <section className="w-full bg-gradient-to-r from-green-600 to-green-800 text-white py-16 md:py-20 relative overflow-hidden">
       <div className="container mx-auto px-4 text-center relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight transform transition-transform duration-700 hover:scale-105">
           Welcome to FreshCart

@@ -50,7 +50,7 @@ export function CategoriesPreview() {
             categories.map((category) => (
               <Link
                 key={category._id}
-                href={`/categories/${category.slug}`}
+                href={`/categories?search=${category.slug}`}
                 className="group block bg-white p-6 rounded-2xl border border-gray-200 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:bg-gray-50"
               >
                 <img

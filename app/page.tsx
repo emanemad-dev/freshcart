@@ -10,14 +10,12 @@ import { NewsletterSection } from "@/shared/components/layout/NewsletterSection"
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col mt-16">
       {/* Hero Section */}
       <HeroSection />
 
       {/* FeatureSection */}
-      <section className="py-16 w-full bg-gray-50">
-        <FeatureSection />
-      </section>
+      <FeatureSection />
 
       {/* Categories Preview */}
       <CategoriesPreview />
