@@ -34,7 +34,7 @@ export default function RootLayout({
       >
         <AppProviders>
           <Navbar />
-          <main className="min-h-screen">
+          <main className="min-h-screen pt-24 md:pt-16 ">
             {children}
           </main>
           <FeaturesSection />

@@ -90,8 +90,8 @@ export const ProductCard = ({ product, onAddToCart, onAddToWishlist }: ProductCa
   return (
     <div className="group relative">
       <Link href={`/products/${product._id}`} className="block">
-        <div className="relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-green-500/10 hover:-translate-y-2 border-3 border-gray-100">
-          
+        {/* <div className="relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-green-500/10 hover:-translate-y-2 border-3 border-gray-100"> */}
+          <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:shadow-gray-500/10 hover:-translate-y-2 border-3 border-gray-100">
           <div className="relative h-64 w-full overflow-hidden bg-gray-50">
             <Image
               src={product.imageCover || "https://via.placeholder.com/400"}
