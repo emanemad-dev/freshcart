@@ -101,7 +101,7 @@ export default function CheckoutPage() {
         </Link>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 @lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Forms */}
             <div className="space-y-6">
               <ShippingForm 
@@ -117,7 +117,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Right Column - Order Summary */}
-            <div className="@lg:sticky @lg:top-24 @lg:h-fit">
+            <div className="lg:sticky lg:top-24 lg:h-fit">
               <OrderSummary 
                 items={items}
                 total={total}

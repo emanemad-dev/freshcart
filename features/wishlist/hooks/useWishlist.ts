@@ -5,7 +5,7 @@ import { wishlistService } from '../api/wishlist.service';
 import { Product } from '@/features/products/types/product.types';
 
 export const useWishlist = () => {
-  const { items, addItem, removeItem, isInWishlist } = useWishlistStore();
+  const { items, addItem, removeItem, clearWishlist, isInWishlist } = useWishlistStore();
 
   const { data: serverWishlist, isLoading } = useQuery({
     queryKey: ['wishlist'],
@@ -24,6 +24,10 @@ export const useWishlist = () => {
     removeItem(productId);
   };
 
+  const clear = () => {
+    clearWishlist();
+  };
+
   const toggle = (product: Product) => {
     const productId = product._id || product.id || '';
     if (isInWishlist(productId)) {
@@ -38,6 +42,7 @@ export const useWishlist = () => {
     isLoading,
     add,
     remove,
+    clear,
     toggle,
     isInWishlist,
   };

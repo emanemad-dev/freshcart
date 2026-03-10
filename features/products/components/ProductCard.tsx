@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { FaHeart, FaRegHeart, FaEye, FaRetweet } from "react-icons/fa";
 import { Product } from "../types/product.types";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
-  onAddToWishlist?: (product: Product) => void;
 }
 
 const demoData = {
@@ -22,14 +21,14 @@ const demoData = {
 export const ProductCard = ({
   product,
   onAddToCart,
-  onAddToWishlist,
 }: ProductCardProps) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { isInWishlist, toggle } = useWishlist();
+  const productId = product._id || product.id || '';
+  const isWishlisted = isInWishlist(productId);
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsWishlisted(!isWishlisted);
-    onAddToWishlist?.(product);
+    toggle(product);
   };
 
   const handleAddToCart = async (e: React.MouseEvent) => {
