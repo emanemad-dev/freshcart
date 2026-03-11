@@ -8,13 +8,14 @@ import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import { authService } from "../api/auth.service";
 import { useAuthStore } from "../store/auth.store";
-import { FaEnvelope, FaLock } from "react-icons/fa";
+import { FaEnvelope, FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const { setAuth } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
@@ -86,14 +87,24 @@ export const LoginForm = () => {
           <div className="relative">
             <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-gray-50/50 focus:bg-white"
+              className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-gray-50/50 focus:bg-white"
             />
+            <div
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <FaEyeSlash className="text-lg" />
+              ) : (
+                <FaEye className="text-lg" />
+              )}
+            </div>
           </div>
         </div>
 
@@ -122,7 +133,7 @@ export const LoginForm = () => {
       {/* Submit Button */}
       <Button
         type="submit"
-        className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 px-4 rounded-xl hover:from-green-700 hover:to-green-600 transition-all font-semibold text-base shadow-lg shadow-green-500/25 hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 px-4 rounded-xl hover:from-green-700 hover:to-green-600 transition-all font-semibold text-base shadow-lg shadow-green-500/25 hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none "
         disabled={loginMutation.isPending}
       >
         {loginMutation.isPending ? (
