@@ -3,20 +3,21 @@ import { addressesService, CreateAddressData } from '../api/addresses.service';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 
 export const useAddresses = () => {
-  const { isAuthenticated } = useAuthStore();
+  // Use selector to directly access token - ensures it works even before persist rehydration
+  const token = useAuthStore((state) => state.token);
   return useQuery({
     queryKey: ['addresses'],
     queryFn: () => addressesService.getAddresses(),
-    enabled: isAuthenticated,
+    enabled: !!token,
   });
 };
 
 export const useAddress = (id: string) => {
-  const { isAuthenticated } = useAuthStore();
+  const token = useAuthStore((state) => state.token);
   return useQuery({
     queryKey: ['address', id],
     queryFn: () => addressesService.getAddress(id),
-    enabled: !!id && isAuthenticated,
+    enabled: !!id && !!token,
   });
 };
 

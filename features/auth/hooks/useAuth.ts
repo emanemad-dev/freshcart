@@ -5,7 +5,10 @@ import { useAuthStore } from '../store/auth.store';
 import { LoginCredentials, RegisterData } from '../types/auth.types';
 
 export const useAuth = () => {
-  const { setAuth, logout, user, isAuthenticated } = useAuthStore();
+  const { setAuth, logout, user } = useAuthStore();
+  // Use selector to directly access token - ensures it works even before persist rehydration
+  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = !!token;
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),

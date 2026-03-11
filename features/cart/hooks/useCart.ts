@@ -7,7 +7,9 @@ import { Product } from '@/features/products/types/product.types';
 
 export const useCart = () => {
   const { items, addItem, removeItem, updateQuantity, clearCart, total } = useCartStore();
-  const { isAuthenticated, token } = useAuthStore();
+  // Use selector to directly access token - ensures it works even before persist rehydration
+  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = !!token;
   const queryClient = useQueryClient();
 
   // Only fetch server cart if user is logged in
@@ -133,10 +135,18 @@ export const useCart = () => {
     ? serverCart!.products.reduce((sum: number, item: { count: number }) => sum + item.count, 0)
     : items.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Get cart ID from server cart
+  const cartId = serverCart?._id;
+  
+  console.log('Server Cart:', serverCart);
+  console.log('Cart ID:', cartId);
+
   return {
     items: cartItems,
     total: cartTotal,
     cartCount,
+    cartId,
+    serverCart,
     isLoading: isAuthenticated && isLoading,
     add,
     remove,
@@ -144,3 +154,4 @@ export const useCart = () => {
     clear,
   };
 };
+
