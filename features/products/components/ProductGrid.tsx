@@ -1,6 +1,6 @@
 // Product Grid Component
-import { Product } from '../types/product.types';
-import { ProductCard } from './ProductCard';
+import { Product } from "../types/product.types";
+import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
   products: Product[];
@@ -20,4 +20,3 @@ export const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
     </div>
   );
 };
-
