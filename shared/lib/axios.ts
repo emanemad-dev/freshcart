@@ -11,9 +11,26 @@ export const axiosInstance = axiosLib.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      // Check for token directly first
+      let token = localStorage.getItem('token');
+      
+      // If not found, check Zustand persist storage
+      if (!token) {
+        const authStorage = localStorage.getItem('auth-storage');
+        if (authStorage) {
+          try {
+            const parsed = JSON.parse(authStorage);
+            token = parsed.state?.token || parsed.token;
+          } catch (e) {
+            console.error('Error parsing auth storage:', e);
+          }
+        }
+      }
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },

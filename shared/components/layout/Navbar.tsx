@@ -17,6 +17,10 @@ import {
   FaBars,
   FaTimes,
   FaHeadphonesAlt,
+  FaUser,
+  FaMapMarkerAlt,
+  FaCog,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 export const Navbar = () => {
@@ -28,6 +32,7 @@ export const Navbar = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   const categoryIdsWithProducts = new Set(
     productsData?.data?.map((p) => p.category?._id).filter(Boolean) || [],
@@ -142,12 +147,90 @@ export const Navbar = () => {
             </Link>
 
             {isAuthenticated ? (
-              <>
-                <span className="text-sm text-gray-600">Hello, {user?.name}</span>
-                <button onClick={logout} className="text-sm text-red-600">
-                  Logout
+              <div className="relative">
+                <button
+                  onClick={() => setProfileModalOpen(!profileModalOpen)}
+                  className="flex items-center gap-2 text-gray-600 hover:text-green-600"
+                >
+                  <FaUser className="text-lg" />
                 </button>
-              </>
+
+                {profileModalOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white border rounded-lg shadow-xl py-2 z-50">
+                    <div className="px-4 pb-3 border-b">
+                      <div className="flex items-center gap-3 py-3">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                          <FaUser className="text-lg text-green-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm">
+                            {user?.name}
+                          </h3>
+                          <p className="text-gray-500 text-xs">{user?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileModalOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <FaUser className="text-green-600 w-4" />
+                      <span>My Profile</span>
+                    </Link>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setProfileModalOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <FaBox className="text-green-600 w-4" />
+                      <span>My Orders</span>
+                    </Link>
+
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setProfileModalOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <FaHeart className="text-green-600 w-4" />
+                      <span>My Wishlist</span>
+                    </Link>
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileModalOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <FaMapMarkerAlt className="text-green-600 w-4" />
+                      <span>Addresses</span>
+                    </Link>
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileModalOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      <FaCog className="text-green-600 w-4" />
+                      <span>Settings</span>
+                    </Link>
+
+                    <div className="border-t mt-2 pt-2">
+                      <button
+                        onClick={() => {
+                          setProfileModalOpen(false);
+                          logout();
+                        }}
+                        className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 w-full"
+                      >
+                        <FaSignOutAlt className="w-4" />
+                        <span>Log out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 href="/login"
@@ -218,7 +301,9 @@ export const Navbar = () => {
 
               <div className="border-t mt-2 pt-3">
                 <div className="text-xs text-gray-400">Support</div>
-                <div className="text-sm font-medium text-gray-700">24/7 Help</div>
+                <div className="text-sm font-medium text-gray-700">
+                  24/7 Help
+                </div>
               </div>
 
               {!isAuthenticated && (

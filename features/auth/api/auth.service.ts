@@ -1,6 +1,18 @@
 import { axios } from '@/shared/lib/axios';
 import { LoginCredentials, RegisterData, AuthResponse } from '../types/auth.types';
 
+export interface UpdateUserData {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  password: string;
+  rePassword: string;
+}
+
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await axios.post('/api/v1/auth/signin', credentials);
@@ -18,6 +30,16 @@ export const authService = {
 
   async getCurrentUser(): Promise<AuthResponse> {
     const response = await axios.get('/api/v1/auth/me');
+    return response.data;
+  },
+
+  async updateMe(data: UpdateUserData): Promise<AuthResponse> {
+    const response = await axios.put('/api/v1/users/updateMe', data);
+    return response.data;
+  },
+
+  async changeMyPassword(data: ChangePasswordData): Promise<AuthResponse> {
+    const response = await axios.put('/api/v1/users/changeMyPassword', data);
     return response.data;
   },
 
