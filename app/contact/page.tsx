@@ -72,7 +72,7 @@ export default function ContactPage() {
         title="Contact Us"
         description="Have a question or need help? We'd love to hear from you."
         icon={<FaHeadphonesAlt />}
-        backgroundColor="bg-blue-600"
+        backgroundColor="bg-green-600"
       />
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

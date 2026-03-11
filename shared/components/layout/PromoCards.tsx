@@ -5,8 +5,8 @@ import { FaArrowRight } from "react-icons/fa";
 
 export function PromoCards() {
   return (
-    <section className="py-12 w-full bg-gray-50 px-4 md:px-8 lg:px-16">
-      <div className="flex flex-col md:flex-row gap-6">
+    <section className="py-12 w-full bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-6">
         {/* card1 */}
         <Link href="/products" className="flex-1">
           <div className="bg-gradient-to-r from-[#00BC7D] to-[#007A55] p-10 rounded-2xl shadow-xl hover:scale-105 transform transition-all duration-500 cursor-pointer h-full">
