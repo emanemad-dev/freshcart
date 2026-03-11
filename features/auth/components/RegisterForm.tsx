@@ -1,43 +1,49 @@
 // Register Form Component
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { Button } from '@/shared/components/ui/Button';
-import { Input } from '@/shared/components/ui/Input';
-import { authService } from '../api/auth.service';
-import { useAuthStore } from '../store/auth.store';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/shared/components/ui/Button";
+import { Input } from "@/shared/components/ui/Input";
+import { authService } from "../api/auth.service";
+import { useAuthStore } from "../store/auth.store";
 
 export const RegisterForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rePassword, setRePassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
   const router = useRouter();
   const { setAuth } = useAuthStore();
 
   const registerMutation = useMutation({
-    mutationFn: (data: { name: string; email: string; password: string; rePassword: string }) =>
-      authService.register(data),
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      password: string;
+      rePassword: string;
+    }) => authService.register(data),
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      window.location.href = '/';
+      window.location.href = "/";
     },
     onError: (error: any) => {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
       alert(message);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== rePassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
-    
+
     registerMutation.mutate({ name, email, password, rePassword });
   };
 
@@ -71,10 +77,13 @@ export const RegisterForm = () => {
         onChange={(e) => setRePassword(e.target.value)}
         required
       />
-      <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
-        {registerMutation.isPending ? 'Registering...' : 'Register'}
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={registerMutation.isPending}
+      >
+        {registerMutation.isPending ? "Registering..." : "Register"}
       </Button>
     </form>
   );
 };
-

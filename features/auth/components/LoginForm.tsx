@@ -1,36 +1,38 @@
 // Login Form Component
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
-import { Button } from '@/shared/components/ui/Button';
-import { Input } from '@/shared/components/ui/Input';
-import { authService } from '../api/auth.service';
-import { useAuthStore } from '../store/auth.store';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
+import { Button } from "@/shared/components/ui/Button";
+import { Input } from "@/shared/components/ui/Input";
+import { authService } from "../api/auth.service";
+import { useAuthStore } from "../store/auth.store";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const { setAuth } = useAuthStore();
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      console.log('Logging in with:', credentials);
+      console.log("Logging in with:", credentials);
       const response = await authService.login(credentials);
-      console.log('Login response:', response);
+      console.log("Login response:", response);
       return response;
     },
     onSuccess: (data) => {
-      console.log('Login success, data:', data);
+      console.log("Login success, data:", data);
       setAuth(data.user, data.token);
-      window.location.href = '/';
+      window.location.href = "/";
     },
     onError: (error: any) => {
-      console.error('Login error:', error);
-      const message = error?.response?.data?.message || 'Login failed. Please check your credentials.';
+      console.error("Login error:", error);
+      const message =
+        error?.response?.data?.message ||
+        "Login failed. Please check your credentials.";
       alert(message);
     },
   });
@@ -45,7 +47,10 @@ export const LoginForm = () => {
       <div className="space-y-4">
         {/* Email Field */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-1.5"
+          >
             Email Address
           </label>
           <div className="relative">
@@ -61,15 +66,18 @@ export const LoginForm = () => {
             />
           </div>
         </div>
-        
+
         {/* Password Field */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
-            <Link 
-              href="/forgot-password" 
+            <Link
+              href="/forgot-password"
               className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
             >
               Forgot Password?
@@ -103,7 +111,7 @@ export const LoginForm = () => {
               Keep me signed in
             </span>
           </label>
-          
+
           {/* Demo Credentials Hint (optional) */}
           <div className="text-xs text-gray-400">
             Demo: test@test.com / 123456
@@ -112,9 +120,9 @@ export const LoginForm = () => {
       </div>
 
       {/* Submit Button */}
-      <Button 
-        type="submit" 
-        className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 px-4 rounded-xl hover:from-green-700 hover:to-green-600 transition-all font-semibold text-base shadow-lg shadow-green-500/25 hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" 
+      <Button
+        type="submit"
+        className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 px-4 rounded-xl hover:from-green-700 hover:to-green-600 transition-all font-semibold text-base shadow-lg shadow-green-500/25 hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         disabled={loginMutation.isPending}
       >
         {loginMutation.isPending ? (
@@ -123,7 +131,7 @@ export const LoginForm = () => {
             <span>Signing in...</span>
           </div>
         ) : (
-          'Sign In'
+          "Sign In"
         )}
       </Button>
 

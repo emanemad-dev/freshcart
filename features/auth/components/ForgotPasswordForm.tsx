@@ -14,12 +14,13 @@ export default function ForgotPasswordForm() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    
+
     try {
       await authService.forgotPassword(email);
       setIsSubmitted(true);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to send reset link";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to send reset link";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -30,11 +31,13 @@ export default function ForgotPasswordForm() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Check Your Email</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Check Your Email
+          </h2>
           <p className="text-gray-600 mb-6">
             We have sent a password reset code to {email}
           </p>
-          <Link 
+          <Link
             href={`/verify-reset-code?email=${encodeURIComponent(email)}`}
             className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
           >
@@ -48,11 +51,16 @@ export default function ForgotPasswordForm() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Forgot Password</h2>
-        
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          Forgot Password
+        </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -66,11 +74,13 @@ export default function ForgotPasswordForm() {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">{error}</div>
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+              {error}
+            </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isLoading}
             className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50"
           >
@@ -82,8 +92,8 @@ export default function ForgotPasswordForm() {
           <Link href="/login" className="text-green-600 hover:text-green-700">
             Back to Login
           </Link>
-         </div>
-      </div> {/* هذا القوس كان ناقصاً */}
+        </div>
+      </div>
     </div>
   );
 }

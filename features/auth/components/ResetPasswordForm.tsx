@@ -69,7 +69,6 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left Side - معلومات أمنية */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center p-16 bg-gradient-to-br from-green-50 to-white">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-64 h-64 bg-green-600 rounded-full"></div>
@@ -94,7 +93,6 @@ export default function ResetPasswordForm() {
             Your new password must be different from previous passwords
           </p>
 
-          {/* خطوات الأمان */}
           <div className="space-y-4 w-full">
             <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -129,7 +127,6 @@ export default function ResetPasswordForm() {
         </div>
       </div>
 
-      {/* Right Side - نموذج إعادة تعيين كلمة المرور */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-lg">
           <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
