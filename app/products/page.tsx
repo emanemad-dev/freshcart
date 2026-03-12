@@ -4,9 +4,13 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useProducts } from "@/features/products/hooks/useProducts";
-import { ProductGrid } from "@/features/products/components/ProductGrid";
+import { ProductCard } from "@/features/products/components/ProductCard";
+
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import { ProductHero } from "./ProductHero";
+import { motion } from "framer-motion";
+
 import { Loader } from "@/shared/components/ui/Loader";
 import { PageHeader } from "@/shared/components/layout/PageHeader";
 import { FaShoppingBag } from "react-icons/fa";
@@ -41,26 +45,26 @@ function ProductsContent() {
 
   return (
     <>
-      <PageHeader
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: title }]}
-        title={title}
-        description="Browse our collection of products"
-        icon={<FaShoppingBag />}
-      />
-      <div className="container mx-auto px-4 py-8">
-        {data?.data && (
-          <>
-            <p className="mb-4 text-gray-600">
-              Showing {data.data.length} products
-            </p>
-            <ProductGrid
-              products={data.data}
-              onAddToCart={addToCart}
-              onAddToWishlist={addToWishlist}
-            />
-          </>
-        )}
-      </div>
+      <ProductHero />
+      <section className="container mx-auto px-4 -mt-20 md:-mt-32 pb-24 relative z-10">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          {data?.data?.map((product, index) => (
+            <motion.div
+              key={product._id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+            >
+              <ProductCard product={product} onAddToCart={addToCart} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
     </>
   );
 }

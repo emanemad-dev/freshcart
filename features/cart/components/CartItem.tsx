@@ -1,10 +1,10 @@
 // Cart Item Component
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { CartItem as CartItemType } from '../types/cart.types';
-import { Product } from '@/features/products/types/product.types';
-import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { CartItem as CartItemType } from "../types/cart.types";
+import { Product } from "@/features/products/types/product.types";
+import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 
 // Extended type to handle both local cart items and server cart items
 interface ExtendedCartItem {
@@ -20,13 +20,18 @@ interface CartItemProps {
   onRemove?: (productId: string) => void;
 }
 
-export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps): React.ReactElement => {
+export const CartItem = ({
+  item,
+  onUpdateQuantity,
+  onRemove,
+}: CartItemProps) => {
   // Handle both 'image' and 'imageCover' properties for compatibility
   const productImage = item.product.imageCover || item.product.image || null;
   // Handle both 'id' and '_id' properties
-  const productId = item.product.id || item.product._id || item.id || '';
+  const productId = item.product.id || item.product._id || item.id || "";
   // Handle both 'name' and 'title' properties
-  const productName = item.product.name || item.product.title || 'Unnamed Product';
+  const productName =
+    item.product.name || item.product.title || "Unnamed Product";
   // Handle both 'quantity' and 'count' properties
   const quantity = item.quantity || item.count || 1;
 
@@ -52,14 +57,14 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps): R
         {/* Product Details */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <Link 
+            <Link
               href={`/products/${productId}`}
               className="font-semibold text-gray-800 hover:text-green-600 transition-colors line-clamp-2"
             >
               {productName}
             </Link>
             <p className="text-sm text-gray-500 mt-1">
-              {item.product.category?.name || 'Category'}
+              {item.product.category?.name || "Category"}
             </p>
           </div>
 
@@ -79,7 +84,9 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps): R
             {/* Quantity Controls */}
             <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-2 py-1">
               <button
-                onClick={() => onUpdateQuantity?.(productId, Math.max(1, quantity - 1))}
+                onClick={() =>
+                  onUpdateQuantity?.(productId, Math.max(1, quantity - 1))
+                }
                 className="p-1 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
                 aria-label="Decrease quantity"
               >
@@ -109,4 +116,3 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps): R
     </div>
   );
 };
-

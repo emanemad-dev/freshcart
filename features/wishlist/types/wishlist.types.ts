@@ -3,7 +3,7 @@ import { Product } from '@/features/products/types/product.types';
 
 export interface WishlistItem {
   id: string;
-  product: Product;
+  product?: Product | null;
   addedAt: string;
 }
 

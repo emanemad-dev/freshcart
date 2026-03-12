@@ -1,59 +1,77 @@
-// Category Card Component
-import Image from 'next/image';
-import Link from 'next/link';
-import { Category } from '../types/categories.types';
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Category } from "../types/categories.types";
+import { FaTags, FaArrowRight } from "react-icons/fa";
 
 interface CategoryCardProps {
   category: Category;
 }
 
 export const CategoryCard = ({ category }: CategoryCardProps) => {
+  const safeCategory = category || {};
+
   return (
-    <Link href={`/categories/${category._id}`} className="block group">
-      <div className="relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-2 border border-gray-100">
-        
-        {/* صورة الكاتيجوري مع تأثيرات */}
-        <div className="relative h-56 w-full overflow-hidden">
-          <Image
-            src={category.image || "https://via.placeholder.com/400x300"}
-            alt={category.name}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          
-          {/* Overlay متدرج عند الهوفر */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          {/* أيقونة أو نص يظهر عند الهوفر */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-100 scale-50">
-            <span className="bg-white/90 text-green-600 px-6 py-3 rounded-full font-semibold text-sm shadow-xl backdrop-blur-sm">
-              Shop Now →
-            </span>
+    <Link href={`/categories/${safeCategory._id || ""}`} className="block">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -12, scale: 1.03 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        className="group bg-gradient-to-br from-white to-emerald-50/50 backdrop-blur-sm border border-white/30 shadow-xl hover:shadow-2xl hover:border-emerald-400/50 rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer"
+      >
+        {/* Image Container */}
+        <div className="relative h-64 md:h-72 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/20 to-transparent" />
+          {safeCategory.image ? (
+            <Image
+              src={safeCategory.image}
+              alt={safeCategory.name || "Category"}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          ) : (
+            <div className="h-full w-full bg-emerald-100 flex items-center justify-center">
+              <FaTags className="w-24 h-24 text-emerald-400" />
+            </div>
+          )}
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/90 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-8">
+            <div className="text-center text-white">
+              <span className="text-3xl font-bold mb-2 block">
+                {safeCategory.name || "Category"}
+              </span>
+              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-8 py-3 rounded-2xl font-semibold hover:bg-white/30 transition-all">
+                Explore{" "}
+                <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* محتوى الكارد */}
-        <div className="p-5 text-center">
-          <h3 className="font-bold text-xl text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">
-            {category.name}
+        {/* Content */}
+        <div className="p-6 md:p-8">
+          <h3 className="font-bold text-2xl text-gray-800 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-1">
+            {safeCategory.name || "Category Name"}
           </h3>
-          
-          {category.description && (
-            <p className="text-gray-500 text-sm line-clamp-2 mb-3">
-              {category.description}
+
+          {safeCategory.description && (
+            <p className="text-gray-600 leading-relaxed line-clamp-2 mb-4">
+              {safeCategory.description}
             </p>
           )}
-          
-          {/* خط سفلي متحرك */}
-          {/* <div className="w-12 h-1 bg-green-500 rounded-full mx-auto group-hover:w-20 transition-all duration-500"></div> */}
-        </div>
 
-        {/* تأثير إضاءة عند الهوفر */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 -inset-full h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer"></div>
+          <div className="flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-emerald-600 font-semibold text-sm flex items-center gap-1">
+              800+ Products
+            </span>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };

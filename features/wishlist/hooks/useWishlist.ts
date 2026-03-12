@@ -61,7 +61,7 @@ export const useWishlist = () => {
   };
 
   return {
-    items: items.length > 0 ? items : serverWishlist || [],
+    items: items.length > 0 ? items : (serverWishlist?.filter(item => item?.product) || []),
     isLoading,
     add,
     remove,

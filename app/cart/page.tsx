@@ -1,55 +1,73 @@
 // Cart Page
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/features/cart/hooks/useCart';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { CartItem } from '@/features/cart/components/CartItem';
-import { PageHeader } from '@/shared/components/layout/PageHeader';
-import { FaShoppingCart, FaCheck, FaShippingFast, FaGift, FaUser, FaTrash, FaTimes, FaExclamationTriangle } from 'react-icons/fa';
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/features/cart/hooks/useCart";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { CartCard } from "@/features/cart/components/CartCard";
+import { CartHero } from "./CartHero";
+import { PageHeader } from "@/shared/components/layout/PageHeader";
+import {
+  FaShoppingCart,
+  FaCheck,
+  FaShippingFast,
+  FaGift,
+  FaUser,
+  FaTrash,
+  FaTimes,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 
 // Helper to get cart item key
-const getCartItemKey = (item: { id?: string; product?: { _id?: string; id?: string } }): string => {
-  return item.id || item.product?._id || item.product?.id || Math.random().toString();
+const getCartItemKey = (item: {
+  id?: string;
+  product?: { _id?: string; id?: string };
+}): string => {
+  return (
+    item.id || item.product?._id || item.product?.id || Math.random().toString()
+  );
 };
 
 // Modal Component
-const Modal = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
-  title, 
-  message, 
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
-  variant = 'danger' 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  onConfirm: () => void; 
-  title: string; 
-  message: string; 
+const Modal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  variant = "danger",
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
   confirmText?: string;
   cancelText?: string;
-  variant?: 'danger' | 'success';
+  variant?: "danger" | "success";
 }) => {
   if (!isOpen) return null;
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      ></div>
       <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 transform transition-all">
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
         >
           <FaTimes />
         </button>
-        
+
         <div className="flex items-center gap-4 mb-4">
-          {variant === 'danger' ? (
+          {variant === "danger" ? (
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
               <FaExclamationTriangle className="w-6 h-6 text-red-600" />
             </div>
@@ -63,20 +81,20 @@ const Modal = ({
             <p className="text-gray-600 text-sm mt-1">{message}</p>
           </div>
         </div>
-        
+
         <div className="flex gap-3 mt-6">
-          <button 
+          <button
             onClick={onClose}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
           >
             {cancelText}
           </button>
-          <button 
+          <button
             onClick={onConfirm}
             className={`flex-1 px-4 py-2 rounded-lg text-white transition-colors ${
-              variant === 'danger' 
-                ? 'bg-red-500 hover:bg-red-600' 
-                : 'bg-green-500 hover:bg-green-600'
+              variant === "danger"
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-green-500 hover:bg-green-600"
             }`}
           >
             {confirmText}
@@ -96,18 +114,18 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     if (isAuthenticated) {
-      router.push('/checkout');
+      router.push("/checkout");
     } else {
-      router.push('/login');
+      router.push("/login");
     }
   };
 
   const handleSignUp = () => {
-    router.push('/register');
+    router.push("/register");
   };
 
   const handleContinueShopping = () => {
-    router.push('/products');
+    router.push("/products");
   };
 
   const handleClearCart = () => {
@@ -133,20 +151,15 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <>
-        <PageHeader 
-          breadcrumbs={[
-            { label: 'Cart' }
-          ]}
-          title="Shopping Cart"
-          icon={<FaShoppingCart />}
-        />
+        <CartHero />
+
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <FaShoppingCart className="w-10 h-10 text-gray-400" />
             </div>
             <p className="text-gray-600 mb-4 text-lg">Your cart is empty</p>
-            <button 
+            <button
               onClick={handleContinueShopping}
               className="px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-medium"
             >
@@ -160,10 +173,8 @@ export default function CartPage() {
 
   return (
     <>
-      <PageHeader 
-        breadcrumbs={[
-          { label: 'Cart' }
-        ]}
+      <PageHeader
+        breadcrumbs={[{ label: "Cart" }]}
         title="Shopping Cart"
         icon={<FaShoppingCart />}
       />
@@ -173,13 +184,13 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {/* Action Buttons */}
             <div className="flex justify-between items-center mb-4">
-              <button 
+              <button
                 onClick={handleContinueShopping}
                 className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors"
               >
                 ← Continue Shopping
               </button>
-              <button 
+              <button
                 onClick={handleClearCart}
                 className="flex items-center gap-2 text-red-500 hover:text-red-600 font-medium transition-colors"
               >
@@ -188,12 +199,13 @@ export default function CartPage() {
               </button>
             </div>
 
-            {items.map((item) => (
-              <CartItem
+            {items.map((item, index) => (
+              <CartCard
                 key={getCartItemKey(item)}
                 item={item}
                 onUpdateQuantity={update}
                 onRemove={handleDeleteItem}
+                index={index}
               />
             ))}
           </div>
@@ -203,32 +215,44 @@ export default function CartPage() {
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden sticky top-24">
               {/* Header */}
               <div className="bg-gradient-to-r from-green-600 to-green-700 p-4">
-                <h2 className="text-lg font-semibold text-white">Order Summary</h2>
+                <h2 className="text-lg font-semibold text-white">
+                  Order Summary
+                </h2>
               </div>
 
               <div className="p-6">
                 {/* Subtotal */}
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Subtotal ({cartCount || items.length} items)</span>
-                    <span className="text-xl font-bold text-gray-800">{total.toFixed(2)} EGP</span>
+                    <span className="text-gray-600">
+                      Subtotal ({cartCount || items.length} items)
+                    </span>
+                    <span className="text-xl font-bold text-gray-800">
+                      {total.toFixed(2)} EGP
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="text-green-600 font-medium">Calculated at checkout</span>
+                    <span className="text-green-600 font-medium">
+                      Calculated at checkout
+                    </span>
                   </div>
                 </div>
 
                 {/* Divider */}
                 <div className="border-t border-gray-200 pt-4 mb-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold text-gray-800">Estimated Total</span>
-                    <span className="text-2xl font-bold text-green-600">{total.toFixed(2)} EGP</span>
+                    <span className="text-lg font-semibold text-gray-800">
+                      Estimated Total
+                    </span>
+                    <span className="text-2xl font-bold text-green-600">
+                      {total.toFixed(2)} EGP
+                    </span>
                   </div>
                 </div>
 
                 {/* Checkout Button */}
-                <button 
+                <button
                   onClick={handleCheckout}
                   className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
                 >
@@ -236,7 +260,7 @@ export default function CartPage() {
                 </button>
 
                 {/* Guest Checkout */}
-                <button 
+                <button
                   onClick={handleContinueShopping}
                   className="w-full bg-white border-2 border-green-500 text-green-600 py-3 rounded-xl font-semibold hover:bg-green-50 transition-all mb-6"
                 >
@@ -245,8 +269,8 @@ export default function CartPage() {
 
                 {/* Sign Up Link */}
                 <p className="text-center text-gray-600 mb-6">
-                  Don't have an account?{' '}
-                  <button 
+                  Don't have an account?{" "}
+                  <button
                     onClick={handleSignUp}
                     className="text-green-600 font-semibold hover:underline"
                   >
@@ -260,25 +284,33 @@ export default function CartPage() {
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <FaCheck className="w-4 h-4 text-green-600" />
                     </div>
-                    <span className="text-sm text-gray-700">Your cart items will be saved</span>
+                    <span className="text-sm text-gray-700">
+                      Your cart items will be saved
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <FaShippingFast className="w-4 h-4 text-blue-600" />
                     </div>
-                    <span className="text-sm text-gray-700">Track your orders easily</span>
+                    <span className="text-sm text-gray-700">
+                      Track your orders easily
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <FaGift className="w-4 h-4 text-purple-600" />
                     </div>
-                    <span className="text-sm text-gray-700">Access exclusive member deals</span>
+                    <span className="text-sm text-gray-700">
+                      Access exclusive member deals
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <FaUser className="w-4 h-4 text-orange-600" />
                     </div>
-                    <span className="text-sm text-gray-700">Manage your profile</span>
+                    <span className="text-sm text-gray-700">
+                      Manage your profile
+                    </span>
                   </div>
                 </div>
               </div>
@@ -313,4 +345,3 @@ export default function CartPage() {
     </>
   );
 }
-

@@ -1,20 +1,10 @@
-# Task: لطيف Design للـ Register Page ✅
+# Fix Wishlist Runtime Error: Cannot read properties of undefined (reading 'imageCover')
 
-## Files Updated:
+## Steps:
 
-- `app/(auth)/register/page.tsx` → Cute design with gradients, emojis, animations
-- `shared/lib/axios.ts` → Connected to ecommerce.routemisr.com ✅
-- `features/auth/components/RegisterForm.tsx` → Real API integration ✅
-
-## API Fixed:
-
-- `features/products/api/product.service.ts` → `/products` endpoints ✅
-- `features/categories/api/categories.service.ts` → `/categories` ✅
-
-## Status:
-
-✅ **Register page شغال 100% مع تصميم لطيف**
-✅ **Products & Categories راجعين من API**
-✅ **Build errors اتحلت**
-
-**npm run dev → localhost:3000/register → جاهز!** 🎉
+1. [x] Update `features/wishlist/types/wishlist.types.ts` - Make product optional (`product?: Product | null`).
+2. [x] Update `features/wishlist/hooks/useWishlist.ts` - Filter serverWishlist to valid items.
+3. [x] Update `app/wishlist/page.tsx` - Filter items before mapping to WishlistCard.
+4. [x] Update `features/wishlist/components/WishlistCard.tsx` - Add comprehensive null checks and fallbacks.
+5. [x] Test: Run `npm run dev`, visit `/wishlist`, check console/no errors. (Safeguards added; filters prevent undefined product access).
+6. [x] Complete task.

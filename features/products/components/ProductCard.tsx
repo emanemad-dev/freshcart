@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaHeart, FaRegHeart, FaEye, FaRetweet } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaEye, FaRetweet, FaStar } from "react-icons/fa";
 import { Product } from "../types/product.types";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 
@@ -9,21 +9,11 @@ interface ProductCardProps {
   onAddToCart?: (product: Product) => void;
 }
 
-const demoData = {
-  category: "Women's Fashion",
-  name: "Woman Shawl",
-  rating: 4.8,
-  reviews: 9,
-  price: 149,
-  currency: "EGP",
-};
+// demoData removed - using real data
 
-export const ProductCard = ({
-  product,
-  onAddToCart,
-}: ProductCardProps) => {
+export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const { isInWishlist, toggle } = useWishlist();
-  const productId = product._id || product.id || '';
+  const productId = product._id || product.id || "";
   const isWishlisted = isInWishlist(productId);
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -43,11 +33,12 @@ export const ProductCard = ({
   };
 
   const renderRatingStars = () => (
-    <div className="flex items-center">
+    <div className="flex items-center gap-1">
       {[...Array(5)].map((_, i) => (
-        <span key={i} className="text-yellow-400 text-sm">
-          ⭐
-        </span>
+        <FaStar
+          key={i}
+          className={`w-3 h-3 ${i < Math.floor(product.ratingsAverage || 0) ? "text-amber-400 fill-current" : "text-gray-300"}`}
+        />
       ))}
     </div>
   );
@@ -104,7 +95,7 @@ export const ProductCard = ({
           <div className="relative h-48 w-full overflow-hidden bg-gray-50">
             <Image
               src={product.imageCover || "https://via.placeholder.com/400"}
-              alt={product.title || demoData.name}
+              alt={product.title || product.name || "Product"}
               fill
               className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -118,17 +109,17 @@ export const ProductCard = ({
 
           <div className="p-4">
             <p className="text-sm text-gray-400 mb-1">
-              {product.category?.name || demoData.category}
+              {product.category?.name || "Category"}
             </p>
 
             <h3 className="font-semibold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
-              {product.title || demoData.name}
+              {product.title || product.name || "Product"}
             </h3>
 
             <div className="flex items-center gap-2 mb-3">
               {renderRatingStars()}
               <span className="text-sm text-gray-400">
-                ({product.ratingsQuantity || demoData.reviews})
+                ({product.ratingsQuantity || 0}) reviews
               </span>
             </div>
 
@@ -166,4 +157,3 @@ export const ProductCard = ({
     </div>
   );
 };
-
