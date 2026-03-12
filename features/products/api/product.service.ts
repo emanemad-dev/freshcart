@@ -16,28 +16,27 @@ export const productService = {
       cleanParams.brand = params.brandId;
     }
     
-    const response = await axios.get('/api/v1/products', { params: cleanParams });
+    const response = await axios.get('/products', { params: cleanParams });
     return response.data;
   },
 
-
   async getProductById(id: string): Promise<Product> {
-    const response = await axios.get(`/api/v1/products/${id}`);
+    const response = await axios.get(`/products/${id}`);
     return response.data.data;
   },
 
   async createProduct(data: Partial<Product>): Promise<Product> {
-    const response = await axios.post('/api/v1/products', data);
+    const response = await axios.post('/products', data);
     return response.data.data;
   },
 
   async updateProduct(id: string, data: Partial<Product>): Promise<Product> {
-    const response = await axios.put(`/api/v1/products/${id}`, data);
+    const response = await axios.put(`/products/${id}`, data);
     return response.data.data;
   },
 
   async deleteProduct(id: string): Promise<void> {
-    await axios.delete(`/api/v1/products/${id}`);
+    await axios.delete(`/products/${id}`);
   },
 };
 

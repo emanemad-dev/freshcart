@@ -1,104 +1,146 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
+import { RegisterForm } from "@/features/auth/components/RegisterForm";
 import {
   FaGoogle,
   FaFacebook,
-  FaTruck,
   FaLock,
   FaStar,
   FaShieldAlt,
   FaLeaf,
-  FaEyeSlash,
-  FaEye,
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaShoppingBasket,
 } from "react-icons/fa";
+import {
+  RiLeafFill,
+  RiTruckFill,
+  RiShieldCheckFill,
+  RiSparklingFill,
+} from "react-icons/ri";
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== rePassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-    console.log({ name, email, password, phone });
-  };
-
   return (
-    <div className="min-h-screen flex bg-white">
-      {/* Left Side*/}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center p-16 bg-white">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-green-600 rounded-full"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-600 rounded-full"></div>
-          <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-green-600 rounded-full"></div>
+    <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-white to-emerald-50 overflow-hidden relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Floating Fruits/Vegetables */}
+        <div className="absolute top-20 left-10 w-16 h-16 opacity-20 animate-float">
+          <span className="text-6xl">🥬</span>
+        </div>
+        <div
+          className="absolute top-40 right-20 w-14 h-14 opacity-15 animate-float"
+          style={{ animationDelay: "0.5s" }}
+        >
+          <span className="text-5xl">🍊</span>
+        </div>
+        <div
+          className="absolute bottom-32 left-1/4 w-12 h-12 opacity-20 animate-float"
+          style={{ animationDelay: "1s" }}
+        >
+          <span className="text-4xl">🍎</span>
+        </div>
+        <div
+          className="absolute top-1/3 right-1/3 w-14 h-14 opacity-15 animate-float"
+          style={{ animationDelay: "1.5s" }}
+        >
+          <span className="text-5xl">🥕</span>
+        </div>
+        <div
+          className="absolute bottom-20 right-1/4 w-16 h-16 opacity-20 animate-float"
+          style={{ animationDelay: "2s" }}
+        >
+          <span className="text-6xl">🍇</span>
         </div>
 
-        {/* Content*/}
+        {/* Cute Dots Pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-10 left-1/4 w-3 h-3 bg-green-300 rounded-full"></div>
+          <div className="absolute top-20 left-1/3 w-2 h-2 bg-emerald-300 rounded-full"></div>
+          <div className="absolute top-16 right-1/4 w-4 h-4 bg-green-200 rounded-full"></div>
+          <div className="absolute bottom-1/4 left-20 w-2 h-2 bg-emerald-200 rounded-full"></div>
+          <div className="absolute bottom-1/3 right-20 w-3 h-3 bg-green-300 rounded-full"></div>
+        </div>
+      </div>
+
+      {/* Left Side */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-center p-12 bg-white/50 backdrop-blur-sm">
+        {/* Cute Header Badge */}
+        <div className="absolute top-8 left-8 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+          <RiSparklingFill className="text-green-500" />
+          Join FreshCart!
+        </div>
+
+        {/* Content */}
         <div className="relative z-10 flex flex-col items-start justify-center flex-1 max-w-xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
-            Welcome to Fresh<span className="text-green-600">Cart</span>
+          {/* Cute Mascot */}
+          <div className="mb-8 relative">
+            <div className="w-48 h-48 bg-gradient-to-br from-green-300 to-emerald-400 rounded-full flex items-center justify-center shadow-xl shadow-green-300/50 relative">
+              <span className="text-8xl">🛒</span>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-300 rounded-full flex items-center justify-center text-2xl shadow-md">
+                ⭐
+              </div>
+              <div className="absolute -bottom-2 -left-2 w-10 h-10 bg-pink-300 rounded-full flex items-center justify-center text-3xl shadow-md">
+                💖
+              </div>
+            </div>
+          </div>
+
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+            Hello Beautiful!
+            <span className="text-3xl ml-1">🌸</span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-8 font-medium">
-            Join thousands of happy customers who enjoy fresh groceries
-            delivered right to their doorstep.
+          <p className="text-lg text-gray-600 mb-8 font-medium">
+            Create your account to start enjoying fresh groceries delivered
+            right to your doorstep 💚
           </p>
 
-          {/* Features */}
-          <div className="space-y-4 mb-8">
-            <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <FaLeaf className="text-xl text-green-600" />
+          {/* Cute Features */}
+          <div className="space-y-3 mb-8 w-full">
+            <div className="flex items-center gap-3 text-gray-700 bg-white p-4 rounded-2xl border-2 border-green-100 shadow-lg shadow-green-100/50 transform hover:scale-105 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+                <RiLeafFill className="text-xl text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Premium Quality</h3>
+                <h3 className="font-bold text-gray-900">Fresh Always</h3>
                 <p className="text-sm text-gray-500">
-                  Premium quality products sourced from trusted suppliers.
+                  Premium quality products waiting for you
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <FaTruck className="text-xl text-green-600" />
+            <div className="flex items-center gap-3 text-gray-700 bg-white p-4 rounded-2xl border-2 border-green-100 shadow-lg shadow-green-100/50 transform hover:scale-105 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-xl flex items-center justify-center shadow-md">
+                <RiTruckFill className="text-xl text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Fast Delivery</h3>
+                <h3 className="font-bold text-gray-900">Lightning Fast</h3>
                 <p className="text-sm text-gray-500">
-                  Same-day delivery available in most areas
+                  Same-day delivery magic ✨
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <FaLock className="text-xl text-green-600" />
+            <div className="flex items-center gap-3 text-gray-700 bg-white p-4 rounded-2xl border-2 border-green-100 shadow-lg shadow-green-100/50 transform hover:scale-105 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                <RiShieldCheckFill className="text-xl text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Secure Shopping</h3>
+                <h3 className="font-bold text-gray-900">Safe & Secure</h3>
                 <p className="text-sm text-gray-500">
-                  Your data and payments are completely secure
+                  Your account is protected ❤️
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-green-100 max-w-md shadow-lg">
-            {/* Customer Info */}
-            <div className="flex items-center gap-3 mb-4">
-              {/* Avatar Image */}
-              <div className="w-10 h-10 rounded-full overflow-hidden shadow-lg">
+          {/* Cute Testimonial Card */}
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200 max-w-md shadow-lg">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-green-300">
                 <img
                   src="https://www.loremfaces.net/96/id/1.jpg"
                   alt="Sarah Johnson"
@@ -106,250 +148,133 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <span className="text-gray-900 font-semibold block">
+                <span className="text-gray-900 font-bold block">
                   Sarah Johnson
                 </span>
-
-                <div className="flex items-center gap-1 mb-3">
-                  <svg
-                    className="w-5 h-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.975a1 1 0 00-.364-1.118L2.047 9.402c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.975z" />
-                  </svg>
-                  <svg
-                    className="w-5 h-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.975a1 1 0 00-.364-1.118L2.047 9.402c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.975z" />
-                  </svg>
-                  <svg
-                    className="w-5 h-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.975a1 1 0 00-.364-1.118L2.047 9.402c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.975z" />
-                  </svg>
-                  <svg
-                    className="w-5 h-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.975a1 1 0 00-.364-1.118L2.047 9.402c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.975z" />
-                  </svg>
-                  <svg
-                    className="w-5 h-5 text-yellow-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.975a1 1 0 00-.364-1.118L2.047 9.402c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.975z" />
-                  </svg>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className="text-yellow-400 text-xs" />
+                  ))}
+                  <span className="text-xs text-gray-500 ml-1">(5.0)</span>
                 </div>
               </div>
             </div>
-
-            {/* Testimonial */}
-            <p className="text-gray-700 italic text-lg leading-relaxed">
-              "FreshCart has transformed my shopping experience. The quality of
-              the products is outstanding, and the delivery is always on time.
-              Highly recommend!"
+            <p className="text-gray-700 italic text-sm leading-relaxed">
+              "Amazing! Signup took seconds and my first delivery was perfect!
+              🌟"
             </p>
           </div>
         </div>
       </div>
 
       {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-xl">
-          <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
+        <div className="w-full max-w-md">
+          <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border-2 border-green-100 relative overflow-hidden">
+            {/* Cute top decoration */}
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-green-300 via-emerald-400 to-green-300"></div>
+
+            {/* Corner decorations */}
+            <div className="absolute top-4 right-4 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <span className="text-green-500 text-sm">🌱</span>
+            </div>
+            <div className="absolute top-4 left-4 w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+              <span className="text-emerald-500 text-sm">✨</span>
+            </div>
+
             {/* Welcome */}
-            <div className="text-center mb-8">
-              <h2 className="text-3xl text-primary-600 font-bold text-gray-800 mb-2">
-                Fresh<span className="text-green-600">Cart</span>
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-300/50 transform -rotate-6">
+                <FaShoppingBasket className="text-2xl text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-1">
+                Create Account
               </h2>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Create Your Account
-              </h2>
-              <p className="text-gray-600 text-md">
-                Start your fresh journey with us today
+              <p className="text-gray-500 text-sm">
+                Get started with FreshCart ✨
               </p>
             </div>
 
             {/* Social */}
-            <div className="space-y-3 mb-8">
-              {/* Google Button */}
+            <div className="space-y-2 mb-6">
               <button
-                className="w-full flex items-center justify-center gap-3 
-                bg-white border border-gray-300 text-gray-700 
-                py-4 px-4 rounded-xl 
-                hover:bg-green-100 hover:border-green-600 
-                transition-colors duration-300 ease-in-out 
-                font-medium text-base"
+                className="w-full flex items-center justify-center gap-2 
+                bg-white border-2 border-gray-200 text-gray-700 
+                py-3 px-4 rounded-xl 
+                hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 
+                hover:border-green-300 hover:shadow-md
+                transition-all duration-300 ease-in-out 
+                font-medium text-sm"
               >
-                <FaGoogle className="text-xl text-red-500" />
+                <FaGoogle className="text-lg" />
                 Continue with Google
               </button>
 
-              {/* Facebook Button */}
               <button
-                className="w-full flex items-center justify-center gap-3 
-                bg-white border border-gray-300 text-gray-700 
-                py-4 px-4 rounded-xl 
-                hover:bg-green-100 hover:border-green-600 
-                transition-colors duration-300 ease-in-out 
-                font-medium text-base"
+                className="w-full flex items-center justify-center gap-2 
+                bg-white border-2 border-gray-200 text-gray-700 
+                py-3 px-4 rounded-xl 
+                hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 
+                hover:border-blue-300 hover:shadow-md
+                transition-all duration-300 ease-in-out 
+                font-medium text-sm"
               >
-                <FaFacebook className="text-xl text-blue-600" />
+                <FaFacebook className="text-lg text-blue-600" />
                 Continue with Facebook
               </button>
             </div>
 
             {/* Divider */}
-            <div className="relative my-8">
+            <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500 font-medium">
-                  OR CONTINUE WITH EMAIL
+              <div className="relative flex justify-center text-xs">
+                <span className="px-3 bg-white text-gray-400 font-medium">
+                  ✨ OR USE EMAIL ✨
                 </span>
               </div>
             </div>
 
-            {/* Register Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
-                  required
-                />
-              </div>
-              {/* Password Field */}
-
-              <div className="relative">
-                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-gray-50/50 focus:bg-white"
-                />
-                <div
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <FaEyeSlash className="text-lg" />
-                  ) : (
-                    <FaEye className="text-lg" />
-                  )}
-                </div>
-              </div>
-
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Confirm Password"
-                  value={rePassword}
-                  onChange={(e) => setRePassword(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 placeholder-gray-400"
-                  required
-                />
-                <div
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className="text-lg" />
-                  ) : (
-                    <FaEye className="text-lg" />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  className="mt-1 w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
-                  required
-                />
-                <span className="text-sm text-gray-600">
-                  I agree to the{" "}
-                  <Link
-                    href="/terms"
-                    className="text-green-600 font-semibold hover:text-green-700"
-                  >
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="/privacy"
-                    className="text-green-600 font-semibold hover:text-green-700"
-                  >
-                    Privacy Policy
-                  </Link>
-                </span>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold hover:bg-green-700 transition-colors shadow-lg shadow-green-600/30"
-              >
-                Create My Account
-              </button>
-            </form>
+            {/* RegisterForm */}
+            <RegisterForm />
 
             {/* Login Link */}
-            <p className="text-center text-base text-gray-600 mt-8">
+            <p className="text-center text-sm text-gray-600 mt-5">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="text-green-600 font-semibold hover:text-green-700 hover:underline"
+                className="text-green-500 font-bold hover:text-green-600 hover:underline"
               >
                 Sign In
               </Link>
             </p>
 
             {/* Trust Info */}
-            <div className="flex items-center justify-center gap-8 mt-8 pt-8 border-t border-gray-100">
-              <div className="flex items-center gap-2 text-base text-gray-600">
-                <FaShieldAlt className="text-green-500 text-xl" />
+            <div className="flex items-center justify-center gap-6 mt-5 pt-5 border-t border-gray-100">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <FaShieldAlt className="text-green-500 text-sm" />
                 <span>SSL Secured</span>
               </div>
-              <div className="flex items-center gap-2 text-base text-gray-600">
-                <FaStar className="text-yellow-400 text-xl" />
-                <span>50K+ Users</span>
+              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <FaStar className="text-yellow-400 text-sm" />
+                <span>50K+ Happy Users</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <FaLeaf className="text-green-500 text-sm" />
+                <span>Fresh Always</span>
               </div>
             </div>
+          </div>
+
+          {/* Back to Home */}
+          <div className="text-center mt-4">
+            <Link
+              href="/"
+              className="text-gray-500 text-sm hover:text-green-500 transition-colors flex items-center justify-center gap-1"
+            >
+              ← Back to Home
+            </Link>
           </div>
         </div>
       </div>
