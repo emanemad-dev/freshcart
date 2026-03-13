@@ -5,7 +5,13 @@ import Link from "next/link";
 import { motion } from "framer-motion"; // Note: install if missing: npm i framer-motion
 import { WishlistItem as WishlistItemType } from "../types/wishlist.types";
 import { Product } from "@/features/products/types/product.types";
-import { FaHeart, FaShoppingCart, FaTrashAlt, FaStar } from "react-icons/fa";
+import {
+  FaHeart,
+  FaShoppingCart,
+  FaTrashAlt,
+  FaStar,
+  FaEye,
+} from "react-icons/fa";
 import { useState } from "react";
 
 interface WishlistCardProps {
@@ -41,7 +47,7 @@ export const WishlistCard = ({
   const productPrice = product.price || 0;
   const priceAfterDiscount = product.priceAfterDiscount || productPrice;
   const hasDiscount = priceAfterDiscount < productPrice;
-  const productSlug = product.slug || productId;
+  const productSlug = product._id || product.id || productSlug || productId;
   const categoryName =
     typeof product.category === "string"
       ? product.category
@@ -136,11 +142,20 @@ export const WishlistCard = ({
           ))}
         </div>
 
-        <Link href={`/products/${productSlug}`} className="block mb-3 h-12">
-          <h3 className="font-bold text-lg md:text-xl text-gray-800 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-            {productName}
-          </h3>
-        </Link>
+        <div className="flex items-center gap-3 mb-3 cursor-pointer group/product">
+          <Link href={`/products/${productSlug}`} className="flex-1">
+            <h3 className="font-bold text-lg md:text-xl text-gray-800 line-clamp-2 group-hover/product:text-emerald-600 transition-colors">
+              {productName}
+            </h3>
+          </Link>
+          <Link
+            href={`/products/${productSlug}`}
+            className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all group-hover/product:scale-110 flex items-center justify-center"
+            title="View details"
+          >
+            <FaEye className="w-5 h-5" />
+          </Link>
+        </div>
 
         {/* Price */}
         <div className="flex items-end gap-2 mb-6">

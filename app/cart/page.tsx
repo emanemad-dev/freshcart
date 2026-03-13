@@ -173,15 +173,10 @@ export default function CartPage() {
 
   return (
     <>
-      <PageHeader
-        breadcrumbs={[{ label: "Cart" }]}
-        title="Shopping Cart"
-        icon={<FaShoppingCart />}
-      />
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+      <CartHero />
+      <section className="container mx-auto px-4 -mt-20 md:-mt-32 pb-24 relative z-10">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-8 mb-8 lg:mb-0">
             {/* Action Buttons */}
             <div className="flex justify-between items-center mb-4">
               <button
@@ -211,7 +206,7 @@ export default function CartPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-4">
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden sticky top-24">
               {/* Header */}
               <div className="bg-gradient-to-r from-green-600 to-green-700 p-4">
@@ -317,7 +312,7 @@ export default function CartPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Clear Cart Modal */}
       <Modal

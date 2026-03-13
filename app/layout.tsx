@@ -5,6 +5,7 @@ import { AppProviders } from "@/providers/AppProviders";
 import { Navbar } from "@/shared/components/layout/Navbar";
 import { TopBar } from "@/shared/components/layout/TopBar";
 import { Footer } from "@/shared/components/layout/Footer";
+import { FeatureSection } from "@/shared/components/layout/FeatureSection";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <TopBar />
           <Navbar />
           <main className="m-0 p-0">{children}</main>
+          <FeatureSection />
           <Footer />
         </AppProviders>
       </body>

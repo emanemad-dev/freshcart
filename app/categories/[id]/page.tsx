@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import { Subcategories } from "./Subcategories";
 import Link from "next/link";
 import { useCategory } from "@/features/categories/hooks/useCategories";
 import { useProducts } from "@/features/products/hooks/useProducts";
@@ -9,7 +10,8 @@ import { useCart } from "@/features/cart/hooks/useCart";
 import { Loader } from "@/shared/components/ui/Loader";
 import Image from "next/image";
 import { FaFilter } from "react-icons/fa";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaAngleRight } from "react-icons/fa";
+
 
 interface CategoryPageProps {
   params: Promise<{
@@ -90,44 +92,33 @@ function CategoryContent({ categoryId }: { categoryId: string }) {
 
       {/* Products Section */}
       <div className="container mx-auto px-4 py-8">
-        {/* Active Filters */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaFilter className="text-green-600" />
-            <span>Active Filters:</span>
-          </div>
-          <div className="flex items-center gap-2 bg-green-100 px-3 py-1.5 rounded-full">
-            {category?.image && (
-              <Image
-                src={category.image}
-                alt={category.name}
-                width={20}
-                height={20}
-                className="object-cover rounded-full"
-              />
-            )}
-            <span className="text-green-700 font-medium">{category?.name}</span>
-            <button
-              onClick={() => window.history.back()}
-              className="ml-1 text-green-500 hover:text-green-700"
-            >
-              <FaTimes />
-            </button>
-          </div>
-        </div>
+        <Subcategories categoryId={categoryId} />
 
         {products?.data && products.data.length > 0 ? (
           <>
-            <p className="mb-4 text-gray-600">
-              Showing {products.data.length} products
-            </p>
-            <ProductGrid products={products.data} onAddToCart={addToCart} />
+            <div className="border-t border-gray-200 pt-16">
+              <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                <span className="h-8 w-1 bg-gradient-to-b from-emerald-500 to-emerald-700 rounded"></span>
+                <span>Products</span>
+              </h3>
+              <p className="mb-8 text-gray-600 text-lg">
+                Showing {products.data.length} products in this category
+              </p>
+              <ProductGrid products={products.data} onAddToCart={addToCart} />
+            </div>
           </>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-xl mb-8">
               No products found for this category
             </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold hover:from-emerald-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
+            >
+              Browse All Products
+              <FaAngleRight />
+            </Link>
           </div>
         )}
       </div>

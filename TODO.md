@@ -1,10 +1,19 @@
-# Fix Wishlist Runtime Error: Cannot read properties of undefined (reading 'imageCover')
+# FreshCart TODO List
 
-## Steps:
+## Current Tasks
 
-1. [x] Update `features/wishlist/types/wishlist.types.ts` - Make product optional (`product?: Product | null`).
-2. [x] Update `features/wishlist/hooks/useWishlist.ts` - Filter serverWishlist to valid items.
-3. [x] Update `app/wishlist/page.tsx` - Filter items before mapping to WishlistCard.
-4. [x] Update `features/wishlist/components/WishlistCard.tsx` - Add comprehensive null checks and fallbacks.
-5. [x] Test: Run `npm run dev`, visit `/wishlist`, check console/no errors. (Safeguards added; filters prevent undefined product access).
-6. [x] Complete task.
+- [x] Initial project setup
+- [x] NewsletterSection redesign (luxury chic design)
+
+## Planned Steps for NewsletterSection Redesign\n1. Create TODO.md ✅\n2. Edit shared/components/layout/NewsletterSection.tsx with chic luxury design (soft beige/rose/gold palette, glassmorphism, elegant typography, animations) ✅\n3. [x] Fix RiCrownLine import to RiVipCrownLine ✅\n4. Preview changes with `npm run dev`.
+
+4. Test responsiveness and accessibility.
+5. Complete task with attempt_completion.
+
+## Other Pending
+
+- Brands page enhancements (TODO-brands.md)
+- Cart improvements (TODO-cart.md)
+- Categories (TODO-categories.md)
+- Products (TODO-products.md)
+- Footer (TODO-footer.md)

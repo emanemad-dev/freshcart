@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { FaHeart, FaRegHeart, FaEye, FaRetweet, FaStar } from "react-icons/fa";
@@ -9,8 +10,6 @@ interface ProductCardProps {
   onAddToCart?: (product: Product) => void;
 }
 
-// demoData removed - using real data
-
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const { isInWishlist, toggle } = useWishlist();
   const productId = product._id || product.id || "";
@@ -18,11 +17,13 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     toggle(product);
   };
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (onAddToCart) {
       await onAddToCart(product);
     }
@@ -30,6 +31,14 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    // Add quick view logic here
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Add share logic here
   };
 
   const renderRatingStars = () => (
@@ -51,109 +60,138 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     );
 
     return (
-      <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-        -{discountPercentage}%
+      <div className="absolute top-3 left-3 bg-red-500 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-sm z-10">
+        -{discountPercentage}% off
       </div>
     );
   };
 
-  const renderQuickActions = () => (
-    <div className="absolute top-4 right-4 flex flex-col gap-2 transition-all duration-500">
+  const renderActionButtons = () => (
+    <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
       <button
         onClick={handleWishlist}
-        className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 text-gray-700 hover:text-red-500"
+        className={`p-2.5 bg-white rounded-full shadow-md border border-gray-100 ${
+          isWishlisted ? "text-red-500" : "text-gray-600"
+        }`}
         aria-label="Add to wishlist"
       >
-        {isWishlisted ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
+        {isWishlisted ? <FaHeart size={16} /> : <FaRegHeart size={16} />}
       </button>
 
       <button
         onClick={handleQuickView}
-        className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 text-gray-700 hover:text-green-500"
+        className="p-2.5 bg-white rounded-full shadow-md border border-gray-100 text-gray-600"
         aria-label="Quick view"
       >
-        <FaEye />
+        <FaEye size={16} />
       </button>
 
       <button
-        onClick={(e) => {
-          e.preventDefault();
-          alert("Share clicked!");
-        }}
-        className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 text-gray-700 hover:text-blue-500"
+        onClick={handleShare}
+        className="p-2.5 bg-white rounded-full shadow-md border border-gray-100 text-gray-600"
         aria-label="Share product"
       >
-        <FaRetweet />
+        <FaRetweet size={16} />
       </button>
     </div>
   );
 
   return (
-    <div className="group relative">
-      <Link href={`/products/${product._id}`} className="block">
-        <div className="relative bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-100 h-full">
-          <div className="relative h-48 w-full overflow-hidden bg-gray-50">
-            <Image
-              src={product.imageCover || "https://via.placeholder.com/400"}
-              alt={product.title || product.name || "Product"}
-              fill
-              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            />
+    <motion.div
+      className="group relative h-full"
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 250, damping: 20 }}
+    >
+      <Link href={`/products/${product._id}`} className="block h-full">
+        <div className="bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 h-full flex flex-col hover:shadow-lg">
+          {/* Image Container - Larger */}
+          <div className="relative w-full h-64 bg-gray-50">
+            <div className="relative w-full h-full p-6">
+              <Image
+                src={
+                  product.imageCover ||
+                  "https://via.placeholder.com/400x400/eeeeee/777?text=Product"
+                }
+                alt={product.title || product.name || "Product"}
+                fill
+                className="object-contain transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
 
-            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-            {renderQuickActions()}
+            {/* Discount Badge */}
             {renderDiscountBadge()}
+
+            {/* Action Buttons Group - Vertical */}
+            {renderActionButtons()}
           </div>
 
-          <div className="p-4">
-            <p className="text-sm text-gray-400 mb-1">
-              {product.category?.name || "Category"}
-            </p>
+          {/* Content - More space for longer card */}
+          <div className="p-5 flex flex-col flex-1">
+            {/* Category */}
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs text-gray-500">
+                {product.category?.name || "Category"}
+              </span>
 
-            <h3 className="font-semibold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
-              {product.title || product.name || "Product"}
+              {product.quantity > 0 ? (
+                <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                  In Stock
+                </span>
+              ) : (
+                <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">
+                  Out of Stock
+                </span>
+              )}
+            </div>
+
+            {/* Title - Larger */}
+            <h3 className="text-base font-semibold text-gray-800 line-clamp-2 mb-3">
+              {product.title || product.name || "Product Name"}
             </h3>
 
-            <div className="flex items-center gap-2 mb-3">
+            {/* Rating */}
+            <div className="flex items-center gap-2 mb-4">
               {renderRatingStars()}
-              <span className="text-sm text-gray-400">
-                ({product.ratingsQuantity || 0}) reviews
+              <span className="text-xs text-gray-400">
+                ({product.ratingsQuantity || 0})
               </span>
             </div>
 
-            <div className="flex justify-between items-center">
-              <div className="flex items-baseline gap-1">
+            {/* Price and Add to Cart */}
+            <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+              <div>
                 {product.priceAfterDiscount ? (
-                  <>
-                    <span className="text-2xl font-bold text-gray-900">
-                      {product.priceAfterDiscount}
-                    </span>
-                    <span className="text-sm text-gray-400 line-through">
-                      {product.price}
-                    </span>
-                  </>
+                  <div>
+                    <p className="text-xl font-bold text-gray-900">
+                      EGP {product.priceAfterDiscount.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-gray-400 line-through">
+                      EGP {product.price.toLocaleString()}
+                    </p>
+                  </div>
                 ) : (
-                  <span className="text-2xl font-bold text-gray-900">
-                    {product.price || demoData.price}
-                  </span>
+                  <p className="text-xl font-bold text-gray-900">
+                    EGP {product.price?.toLocaleString() || "0"}
+                  </p>
                 )}
-                <span className="text-sm text-gray-400">EGP</span>
               </div>
+
+              {/* Add to cart button */}
               <button
                 onClick={handleAddToCart}
-                className="w-9 h-9 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-300 shadow-md hover:shadow-lg"
-                aria-label="Add to cart"
+                disabled={product.quantity === 0}
+                className={`text-sm px-5 py-2.5 rounded-lg font-medium transition-all ${
+                  product.quantity > 0
+                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                }`}
               >
-                <span className="text-white text-xl font-bold leading-none">
-                  +
-                </span>
+                {product.quantity > 0 ? "+ Add" : "Sold out"}
               </button>
             </div>
           </div>
         </div>
       </Link>
-    </div>
+    </motion.div>
   );
 };
