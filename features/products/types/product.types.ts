@@ -1,7 +1,7 @@
 // Product Types
 export interface Product {
   _id: string;
-  id?: string; // For cart compatibility
+  id?: string;
   title: string;
   slug: string;
   description: string;
@@ -9,8 +9,8 @@ export interface Product {
   priceAfterDiscount?: number;
   imageCover: string;
   images: string[];
-  image?: string; // For cart compatibility
-  name?: string; // For cart compatibility
+  image?: string;
+  name?: string;
   category: {
     _id: string;
     name: string;
@@ -35,6 +35,7 @@ export interface ProductListParams {
   page?: number;
   limit?: number;
   categoryId?: string;
+  subcategoryId?: string;
   brandId?: string;
   search?: string;
   minPrice?: number;

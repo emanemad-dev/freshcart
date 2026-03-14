@@ -4,17 +4,11 @@ import { Product, ProductListParams, ProductListResponse } from '../types/produc
 
 export const productService = {
   async getProducts(params?: ProductListParams): Promise<ProductListResponse> {
-    // Filter out empty params
     const cleanParams: Record<string, string> = {};
-    if (params?.search) {
-      cleanParams.search = params.search;
-    }
-    if (params?.categoryId) {
-      cleanParams.category = params.categoryId;
-    }
-    if (params?.brandId) {
-      cleanParams.brand = params.brandId;
-    }
+    if (params?.search) cleanParams.search = params.search;
+    if (params?.categoryId) cleanParams.category = params.categoryId;
+    if (params?.subcategoryId) cleanParams['category[in]'] = params.subcategoryId;
+    if (params?.brandId) cleanParams.brand = params.brandId;
     
     const response = await axios.get('/products', { params: cleanParams });
     return response.data;

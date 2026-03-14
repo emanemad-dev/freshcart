@@ -1,19 +1,8 @@
-# FreshCart TODO List
+# FreshCart TODOs
 
-## Current Tasks
+## Current Task: Fix X icon not working in ProductCard on Home
 
-- [x] Initial project setup
-- [x] NewsletterSection redesign (luxury chic design)
-
-## Planned Steps for NewsletterSection Redesign\n1. Create TODO.md ✅\n2. Edit shared/components/layout/NewsletterSection.tsx with chic luxury design (soft beige/rose/gold palette, glassmorphism, elegant typography, animations) ✅\n3. [x] Fix RiCrownLine import to RiVipCrownLine ✅\n4. Preview changes with `npm run dev`.
-
-4. Test responsiveness and accessibility.
-5. Complete task with attempt_completion.
-
-## Other Pending
-
-- Brands page enhancements (TODO-brands.md)
-- Cart improvements (TODO-cart.md)
-- Categories (TODO-categories.md)
-- Products (TODO-products.md)
-- Footer (TODO-footer.md)
+- [x] 1. Update ProductGrid.tsx to pass onDismiss prop to ProductCards
+- [x] 2. Update FeaturedProducts.tsx to add dismiss state and handler
+- [x] 3. Update ProductCard.tsx to add X (FaTimes) button + onDismiss handler
+- [x] 4. Test on home page (npm run dev, hover card, click X)

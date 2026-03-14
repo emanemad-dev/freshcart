@@ -43,7 +43,9 @@ export function FeaturedProducts() {
               </span>
             </span>
           </h2>
-          <div className="text-center text-gray-500 py-12">Unable to load products. Please try again later.</div>
+          <div className="text-center text-gray-500 py-12">
+            Unable to load products. Please try again later.
+          </div>
         </div>
       </section>
     );
@@ -64,7 +66,9 @@ export function FeaturedProducts() {
           </span>
         </h2>
         {products.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">No products found.</div>
+          <div className="text-center text-gray-500 py-12">
+            No products found.
+          </div>
         ) : (
           <ProductGrid products={products} onAddToCart={addToCart} />
         )}

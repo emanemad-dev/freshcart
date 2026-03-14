@@ -5,7 +5,7 @@ import { ProductListParams, Product } from '../types/product.types';
 
 export const useProducts = (params?: ProductListParams) => {
   return useQuery({
-    queryKey: ['products', params?.search || '', params?.categoryId || '', params?.brandId || ''],
+    queryKey: ['products', params?.search || '', params?.categoryId || '', params?.subcategoryId || '', params?.brandId || ''],
     queryFn: () => productService.getProducts(params),
   });
 };

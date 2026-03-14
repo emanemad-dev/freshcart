@@ -1,72 +1,75 @@
 "use client";
 
-import Link from "next/link";
-import { useBrands } from "@/features/brands/hooks/useBrands";
-import { BrandCard } from "@/features/brands/components/BrandCard";
-import { Loader } from "@/shared/components/ui/Loader";
-import { BrandHero } from "./BrandHero";
 import { motion } from "framer-motion";
-import { FaStore } from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
+import { FaStore, FaArrowRight } from "react-icons/fa";
 
-export default function BrandsPage() {
-  const { data: brands, isLoading, error } = useBrands();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-purple-50">
-        <Loader size="lg" />
-      </div>
-    );
-  }
-
-  if (error || !brands || brands.length === 0) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 py-16 bg-gradient-to-br from-slate-50 to-purple-50">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-8"
-        >
-          <FaStore className="w-16 h-16 text-purple-500" />
-        </motion.div>
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          No Brands Found
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-md">
-          Check back later for exciting brand partnerships!
-        </p>
-        <Link
-          href="/products"
-          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-4 rounded-3xl font-bold text-lg hover:shadow-xl transition-all flex items-center gap-3"
-        >
-          Shop Products
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <BrandHero />
-      <section className="container mx-auto px-4 -mt-16 md:-mt-24 pb-24 relative z-10">
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 md:gap-8"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          {brands.map((brand, index) => (
-            <motion.div
-              key={brand._id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.05 }}
-            >
-              <BrandCard brand={brand} />
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-    </>
-  );
+interface Brand {
+  _id: string;
+  name: string;
+  slug: string;
+  image: string;
+  productCount?: number;
 }
+
+interface BrandCardProps {
+  brand: Brand;
+}
+
+export const BrandCard = ({ brand }: BrandCardProps) => {
+  return (
+    <motion.div
+      className="group relative h-full"
+      whileHover={{ y: -3 }}
+      transition={{ type: "spring", stiffness: 250, damping: 20 }}
+    >
+      <Link href={`/brands/${brand._id}`} className="block h-full">
+        <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-purple-200 transition-all duration-300 h-full flex flex-col hover:shadow-md hover:shadow-purple-100/30">
+          {/* Image Container */}
+          <div className="relative aspect-square bg-gradient-to-br from-purple-50 to-purple-100/20 p-3">
+            <div className="relative w-full h-full rounded-xl overflow-hidden bg-white shadow-sm group-hover:shadow-md transition-all duration-300">
+              {brand.image ? (
+                <Image
+                  src={brand.image}
+                  alt={brand.name}
+                  fill
+                  className="object-contain transition-transform duration-500 group-hover:scale-110"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-purple-200">
+                  <FaStore className="w-8 h-8 text-purple-500" />
+                </div>
+              )}
+            </div>
+
+            {/* Product Count Badge */}
+            {brand.productCount && brand.productCount > 0 && (
+              <div className="absolute top-2 left-2 z-10 bg-purple-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg">
+                {brand.productCount}+
+              </div>
+            )}
+
+            {/* Quick View Icon */}
+            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300">
+              <div className="p-1.5 bg-white rounded-full shadow-md border border-gray-100 text-purple-500">
+                <FaArrowRight size={10} />
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-3 text-center">
+            <h3 className="text-sm font-semibold text-gray-800 group-hover:text-purple-600 transition-colors line-clamp-1">
+              {brand.name}
+            </h3>
+
+            <p className="text-xs text-gray-500 font-medium mt-1">
+              {brand.productCount || 0} products
+            </p>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
