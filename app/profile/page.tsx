@@ -16,9 +16,8 @@ import {
   FaTrash,
   FaEdit,
   FaPlus,
-  FaEnvelope,
-  FaPhone,
   FaHome,
+  FaPhone,
 } from "react-icons/fa";
 import { Input } from "@/shared/components/ui/Input";
 import { Button } from "@/shared/components/ui/Button";
@@ -40,21 +39,18 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<TabType>("profile");
   const [showAddressForm, setShowAddressForm] = useState(false);
 
-  // Profile form state
   const [profileForm, setProfileForm] = useState({
     name: user?.name || "",
     email: user?.email || "",
     phone: user?.phone || "",
   });
 
-  // Password form state
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     password: "",
     rePassword: "",
   });
 
-  // Address form state
   const [addressForm, setAddressForm] = useState({
     name: "",
     details: "",
@@ -103,7 +99,7 @@ export default function ProfilePage() {
   }
 
   const tabs = [
-    { id: "profile" as TabType, label: "My Profile", icon: FaUser },
+    { id: "profile" as TabType, label: "My Account", icon: FaUser },
     { id: "addresses" as TabType, label: "My Addresses", icon: FaMapMarkerAlt },
     { id: "settings" as TabType, label: "Settings", icon: FaCog },
   ];
@@ -113,23 +109,23 @@ export default function ProfilePage() {
       <PageHeader
         breadcrumbs={[{ label: "Profile" }]}
         title="My Account"
-        description="Manage your addresses and account settings"
+        description="Update your profile information and manage your addresses"
         icon={<FaUser />}
       />
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Tabs - Vertical */}
+          {/* Sidebar Tabs */}
           <div className="md:w-64 flex-shrink-0">
             <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-lg font-medium transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-3 px-5 py-3 rounded-2xl font-medium transition-all whitespace-nowrap ${
                     activeTab === tab.id
-                      ? "bg-green-600 text-white shadow-lg shadow-green-600/25"
-                      : "bg-white text-gray-600 hover:bg-gray-50 border"
+                      ? "bg-green-600 text-white shadow-lg"
+                      : "bg-white text-gray-600 hover:bg-green-50 shadow-sm"
                   }`}
                 >
                   <tab.icon className="text-sm" />
@@ -140,22 +136,20 @@ export default function ProfilePage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1">
+          <div className="flex-1 space-y-6">
             {/* Profile Tab */}
             {activeTab === "profile" && (
-              <div className="bg-white rounded-2xl shadow-sm border p-8 max-w-2xl">
-                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                  <FaUser className="text-green-600" />
-                  Profile Information
-                </h2>
-                <form onSubmit={handleProfileSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name
-                      </label>
+              <div className="space-y-6">
+                {/* Profile Information Card */}
+                <div className="bg-white rounded-2xl shadow-sm p-8">
+                  <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                    <FaUser className="text-green-600" />
+                    Profile Information
+                  </h2>
+                  <form onSubmit={handleProfileSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
                       <Input
-                        type="text"
+                        label="Full Name"
                         value={profileForm.name}
                         onChange={(e) =>
                           setProfileForm({
@@ -165,13 +159,8 @@ export default function ProfilePage() {
                         }
                         placeholder="Enter your name"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address
-                      </label>
                       <Input
-                        type="email"
+                        label="Email Address"
                         value={profileForm.email}
                         onChange={(e) =>
                           setProfileForm({
@@ -182,13 +171,8 @@ export default function ProfilePage() {
                         placeholder="Enter your email"
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
                     <Input
-                      type="tel"
+                      label="Phone Number"
                       value={profileForm.phone}
                       onChange={(e) =>
                         setProfileForm({
@@ -198,27 +182,26 @@ export default function ProfilePage() {
                       }
                       placeholder="01xxxxxxxxx"
                     />
-                  </div>
-                  <div className="pt-4">
-                    <Button type="submit" className="px-8">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white px-8">
                       Save Changes
                     </Button>
-                  </div>
-                </form>
+                  </form>
+                </div>
 
-                <div className="mt-10 pt-8 border-t">
+                {/* Account Information Card */}
+                <div className="bg-green-50 rounded-2xl shadow-sm p-8">
                   <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                     <FaCog className="text-green-600" />
                     Account Information
                   </h2>
                   <div className="grid md:grid-cols-2 gap-6 text-sm">
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-gray-500 mb-1">User ID</p>
                       <p className="font-mono text-gray-700">
                         {user?._id || "—"}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-gray-500 mb-1">Role</p>
                       <p className="font-medium text-gray-700">user</p>
                     </div>
@@ -233,88 +216,74 @@ export default function ProfilePage() {
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold flex items-center gap-2">
                     <FaMapMarkerAlt className="text-green-600" />
-                    My Addresses
+                    Manage your saved delivery addresses
                   </h2>
                   <Button
                     onClick={() => setShowAddressForm(!showAddressForm)}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
                   >
                     <FaPlus className="text-sm" />
-                    Add New Address
+                    Add Address
                   </Button>
                 </div>
 
                 {showAddressForm && (
-                  <div className="bg-white rounded-2xl shadow-sm border p-6 max-w-2xl">
-                    <h3 className="text-lg font-semibold mb-4">
+                  <div className="bg-white rounded-2xl shadow-sm p-6 max-w-2xl mx-auto">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <FaMapMarkerAlt className="text-green-600" />
                       Add New Address
                     </h3>
                     <form onSubmit={handleAddressSubmit} className="space-y-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Address Name
-                          </label>
-                          <Input
-                            value={addressForm.name}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                name: e.target.value,
-                              })
-                            }
-                            placeholder="e.g. Home, Office"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            City
-                          </label>
-                          <Input
-                            value={addressForm.city}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                city: e.target.value,
-                              })
-                            }
-                            placeholder="Cairo"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Full Address
-                        </label>
-                        <Input
-                          value={addressForm.details}
-                          onChange={(e) =>
-                            setAddressForm({
-                              ...addressForm,
-                              details: e.target.value,
-                            })
-                          }
-                          placeholder="Street, building, apartment..."
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number
-                        </label>
-                        <Input
-                          value={addressForm.phone}
-                          onChange={(e) =>
-                            setAddressForm({
-                              ...addressForm,
-                              phone: e.target.value,
-                            })
-                          }
-                          placeholder="01xxxxxxxxx"
-                        />
-                      </div>
+                      <Input
+                        label="Address Name"
+                        value={addressForm.name}
+                        onChange={(e) =>
+                          setAddressForm({
+                            ...addressForm,
+                            name: e.target.value,
+                          })
+                        }
+                        placeholder="Home / Office"
+                      />
+                      <Input
+                        label="City"
+                        value={addressForm.city}
+                        onChange={(e) =>
+                          setAddressForm({
+                            ...addressForm,
+                            city: e.target.value,
+                          })
+                        }
+                        placeholder="Mansoura"
+                      />
+                      <Input
+                        label="Full Address"
+                        value={addressForm.details}
+                        onChange={(e) =>
+                          setAddressForm({
+                            ...addressForm,
+                            details: e.target.value,
+                          })
+                        }
+                        placeholder="Street, building..."
+                      />
+                      <Input
+                        label="Phone"
+                        value={addressForm.phone}
+                        onChange={(e) =>
+                          setAddressForm({
+                            ...addressForm,
+                            phone: e.target.value,
+                          })
+                        }
+                        placeholder="01207995306"
+                      />
                       <div className="flex gap-3 pt-2">
-                        <Button type="submit" className="px-6">
-                          Add Address
+                        <Button
+                          type="submit"
+                          className="px-6 bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          Add
                         </Button>
                         <Button
                           type="button"
@@ -331,7 +300,7 @@ export default function ProfilePage() {
                 {addressesLoading ? (
                   <p className="text-gray-500">Loading addresses...</p>
                 ) : addressesData?.data?.length === 0 ? (
-                  <div className="bg-white rounded-2xl shadow-sm border p-12 text-center">
+                  <div className="bg-green-50 rounded-2xl shadow-sm p-12 text-center">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <FaMapMarkerAlt className="text-3xl text-green-600" />
                     </div>
@@ -342,7 +311,10 @@ export default function ProfilePage() {
                       Add your first delivery address to make checkout faster
                       and easier.
                     </p>
-                    <Button onClick={() => setShowAddressForm(true)}>
+                    <Button
+                      onClick={() => setShowAddressForm(true)}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
                       Add Your First Address
                     </Button>
                   </div>
@@ -351,7 +323,7 @@ export default function ProfilePage() {
                     {addressesData?.data?.map((address: Address) => (
                       <div
                         key={address._id}
-                        className="bg-white rounded-2xl shadow-sm border p-6 relative hover:shadow-md transition-shadow"
+                        className="bg-white rounded-2xl shadow-sm p-6 relative hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -375,7 +347,7 @@ export default function ProfilePage() {
                           <FaPhone className="text-xs" />
                           {address.phone}
                         </div>
-                        <div className="flex gap-2 pt-4 border-t">
+                        <div className="flex gap-2 pt-4 border-t border-gray-100">
                           <button className="flex-1 flex items-center justify-center gap-2 py-2 text-sm text-green-600 hover:bg-green-50 rounded-lg transition-colors">
                             <FaEdit className="text-xs" />
                             Edit
@@ -397,70 +369,57 @@ export default function ProfilePage() {
 
             {/* Settings Tab */}
             {activeTab === "settings" && (
-              <div className="bg-white rounded-2xl shadow-sm border p-8 max-w-2xl">
+              <div className="bg-white rounded-2xl shadow-sm p-8 max-w-2xl mx-auto">
                 <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                   <FaCog className="text-green-600" />
                   Change Password
                 </h2>
                 <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Current Password
-                    </label>
-                    <Input
-                      type="password"
-                      value={passwordForm.currentPassword}
-                      onChange={(e) =>
-                        setPasswordForm({
-                          ...passwordForm,
-                          currentPassword: e.target.value,
-                        })
-                      }
-                      placeholder="Enter your current password"
-                    />
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        New Password
-                      </label>
-                      <Input
-                        type="password"
-                        value={passwordForm.password}
-                        onChange={(e) =>
-                          setPasswordForm({
-                            ...passwordForm,
-                            password: e.target.value,
-                          })
-                        }
-                        placeholder="Enter your new password"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Must be at least 6 characters
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm New Password
-                      </label>
-                      <Input
-                        type="password"
-                        value={passwordForm.rePassword}
-                        onChange={(e) =>
-                          setPasswordForm({
-                            ...passwordForm,
-                            rePassword: e.target.value,
-                          })
-                        }
-                        placeholder="Confirm your new password"
-                      />
-                    </div>
-                  </div>
-                  <div className="pt-4">
-                    <Button type="submit" className="px-8">
-                      Change Password
-                    </Button>
-                  </div>
+                  <Input
+                    label="Current Password"
+                    type="password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                    placeholder="Enter your current password"
+                  />
+                  <Input
+                    label="New Password"
+                    type="password"
+                    value={passwordForm.password}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        password: e.target.value,
+                      })
+                    }
+                    placeholder="Enter your new password"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Must be at least 6 characters
+                  </p>
+                  <Input
+                    label="Confirm New Password"
+                    type="password"
+                    value={passwordForm.rePassword}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        rePassword: e.target.value,
+                      })
+                    }
+                    placeholder="Confirm your new password"
+                  />
+                  <Button
+                    type="submit"
+                    className="px-8 bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Change Password
+                  </Button>
                 </form>
               </div>
             )}

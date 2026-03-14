@@ -48,7 +48,7 @@ export function HeroSlider() {
   const current = slides[currentSlide];
 
   return (
-    <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+    <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-amber-700">
       {/* Slides */}
       <div className="absolute inset-0">
         <motion.div
