@@ -1,18 +1,15 @@
-// Cart Types
 import { Product } from '@/features/products/types/product.types';
 
 export interface CartItem {
-  id: string;
+  id?: string;
+  _id?: string;
   product: Product;
-  quantity: number;
+  count: number;
+  price?: number; // Fallback for server cart items
 }
 
 export interface Cart {
-  products: Array<{
-    count: number;
-    price: number;
-    product: Product;
-  }>;
+  products: CartItem[];
   totalCartPrice: number;
   _id?: string;
 }

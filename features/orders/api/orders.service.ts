@@ -1,6 +1,10 @@
 // Orders API Service
-import { axios } from '@/shared/lib/axios';
-import { Order, OrderListParams, OrderListResponse } from '../types/orders.types';
+import { axios } from "@/shared/lib/axios";
+import {
+  Order,
+  OrderListParams,
+  OrderListResponse,
+} from "../types/orders.types";
 
 export interface ShippingAddress {
   details: string;
@@ -11,33 +15,45 @@ export interface ShippingAddress {
 
 export const ordersService = {
   async getOrders(params?: OrderListParams): Promise<OrderListResponse> {
-    const response = await axios.get('/api/v1/orders', { params });
+    const response = await axios.get("https://ecommerce.routemisr.com/api/v1/orders");
     return response.data;
   },
 
-  async getOrderById(id: string): Promise<Order> {
-    const response = await axios.get(`/api/v1/orders/${id}`);
-    return response.data.data;
+  async getUserOrders(userId: string): Promise<OrderListResponse> {
+    const response = await axios.get(`https://ecommerce.routemisr.com/api/v1/orders/user/${userId}`);
+    return response.data;
   },
 
   async createOrder(data: { items: any[]; total: number }): Promise<Order> {
-    const response = await axios.post('/api/v1/orders', data);
+    const response = await axios.post("/api/v1/orders", data);
     return response.data.data;
   },
 
   // Create Cash Order From Cart (v2)
-  async createCashOrder(cartId: string, shippingAddress: ShippingAddress): Promise<Order> {
-    const response = await axios.post(`/api/v2/orders/${cartId}`, {
-      shippingAddress
-    });
+  async createCashOrder(
+    cartId: string,
+    shippingAddress: ShippingAddress,
+  ): Promise<Order> {
+    const response = await axios.post(`https://ecommerce.routemisr.com/api/v2/orders/${cartId}`,
+      {
+        shippingAddress,
+      },
+    );
     return response.data.data;
   },
 
   // Create Checkout Session for online payment
-  async createCheckoutSession(cartId: string, url: string, shippingAddress: ShippingAddress): Promise<{ url: string }> {
-    const response = await axios.post(`/api/v1/orders/checkout-session/${cartId}?url=${url}`, {
-      shippingAddress
-    });
+  async createCheckoutSession(
+    cartId: string,
+    url: string,
+    shippingAddress: ShippingAddress,
+  ): Promise<{ url: string }> {
+    const response = await axios.post(
+      `/api/v1/orders/checkout-session/${cartId}?url=${url}`,
+      {
+        shippingAddress,
+      },
+    );
     return response.data;
   },
 
@@ -50,4 +66,3 @@ export const ordersService = {
     await axios.delete(`/api/v1/orders/${id}`);
   },
 };
-

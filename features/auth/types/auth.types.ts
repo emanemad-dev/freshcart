@@ -1,9 +1,11 @@
 // Auth Types
 export interface User {
-  _id: string;
+  _id?: string;
+  id?: string;
   email: string;
   name: string;
   phone?: string;
+  role?: string;
 }
 
 export interface LoginCredentials {

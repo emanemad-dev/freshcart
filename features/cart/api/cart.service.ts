@@ -14,7 +14,7 @@ export const cartService = {
   },
 
   async updateCartItem(itemId: string, quantity: number): Promise<CartItem> {
-    const response = await axios.put(`https://ecommerce.routemisr.com/api/v2/cart/${itemId}`, { quantity });
+    const response = await axios.put(`https://ecommerce.routemisr.com/api/v2/cart/${itemId}`, { count: quantity });
     return response.data.data;
   },
 

@@ -4,15 +4,16 @@ import { useCartStore } from '../store/cart.store';
 import { cartService } from '../api/cart.service';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { Product } from '@/features/products/types/product.types';
+import { CartItem } from '../types/cart.types';
+import { useState, useCallback } from 'react';
 
 export const useCart = () => {
-  const { items, addItem, removeItem, updateQuantity, clearCart, total } = useCartStore();
-  // Use selector to directly access token - ensures it works even before persist rehydration
+  const { items: localItems, addItem, removeItem, updateCount, clearCart, total: localTotal } = useCartStore();
+  const [error, setError] = useState<string | null>(null);
   const token = useAuthStore((state) => state.token);
   const isAuthenticated = !!token;
   const queryClient = useQueryClient();
 
-  // Only fetch server cart if user is logged in
   const { data: serverCart, isLoading } = useQuery({
     queryKey: ['cart'],
     queryFn: cartService.getCart,
@@ -28,18 +29,26 @@ export const useCart = () => {
   });
 
   const removeFromCartMutation = useMutation({
-    mutationFn: (productId: string) => cartService.removeFromCart(productId),
+    mutationFn: (itemId: string) => cartService.removeFromCart(itemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
+    onError: (err) => {
+      setError('Failed to remove item');
+      console.error('Remove error:', err);
+    }
   });
 
   const updateCartMutation = useMutation({
-    mutationFn: ({ productId, quantity }: { productId: string; quantity: number }) =>
-      cartService.updateCartItem(productId, quantity),
+    mutationFn: ({ itemId, count }: { itemId: string; count: number }) =>
+      cartService.updateCartItem(itemId, count),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
+    onError: (err) => {
+      setError('Failed to update quantity');
+      console.error('Update error:', err);
+    }
   });
 
   const clearCartMutation = useMutation({
@@ -49,105 +58,108 @@ export const useCart = () => {
     },
   });
 
-  const add = async (product: Product, quantity: number = 1) => {
+  const getServerIds = useCallback((item: any) => ({
+    cartId: serverCart?._id || '',
+    productId: item.product?._id || item.product?.id || ''
+  }), [serverCart]);
+
+  const add = useCallback(async (product: Product, count: number = 1) => {
     const productId = product._id || product.id;
     if (!productId) {
-      console.error("Product ID not found");
+      setError("Product ID not found");
       return;
     }
 
-    // Always add to local store first (for both logged in and guest users)
-    addItem(product, quantity);
+    addItem(product, count);
 
-    // If user is logged in, also sync with server
     if (isAuthenticated && token) {
       try {
-        await addToCartMutation.mutateAsync({ productId, quantity });
+        await addToCartMutation.mutateAsync({ productId, quantity: count });
       } catch (error) {
-        const axiosError = error as { response?: { status?: number } };
-        if (axiosError?.response?.status !== 401) {
-          console.error("Error adding to server cart:", error);
-        }
+        setError("Failed to add to cart");
+        console.error("Error adding to server cart:", error);
       }
     }
-  };
+  }, [addItem, isAuthenticated, token, addToCartMutation, setError]);
 
-  const remove = async (productId: string) => {
-    // Always remove from local store
-    removeItem(productId);
+  const remove = useCallback(async (item: CartItem) => {
+    const itemId = item.id || item._id || '';
+    removeItem(itemId);
 
-    // If user is logged in, also remove from server
-    if (isAuthenticated && token) {
+    if (isAuthenticated && token && serverCart) {
       try {
-        await removeFromCartMutation.mutateAsync(productId);
-      } catch (error) {
-        const axiosError = error as { response?: { status?: number } };
-        if (axiosError?.response?.status !== 401) {
-          console.error("Error removing from server cart:", error);
+        const { cartId, productId } = getServerIds(item);
+        if (cartId && productId) {
+          console.log('🗑️  Remove server item:', {cartId, productId});
+          await removeFromCartMutation.mutateAsync({cartId, productId});
+        } else {
+          console.warn('❌ Missing cartId/productId for remove:', item);
         }
+      } catch (error) {
+        setError("Failed to remove item");
+        console.error("Error removing from server cart:", error);
       }
     }
-  };
+  }, [removeItem, isAuthenticated, token, serverCart, getServerIds, removeFromCartMutation, setError]);
 
-  const update = async (productId: string, quantity: number) => {
-    // Always update local store
-    updateQuantity(productId, quantity);
+  const update = useCallback(async (item: CartItem, count: number) => {
+    const itemId = item.id || item._id || '';
+    updateCount(itemId, count);
 
-    // If user is logged in, also update server
-    if (isAuthenticated && token) {
+    if (isAuthenticated && token && serverCart && count > 0) {
       try {
-        await updateCartMutation.mutateAsync({ productId, quantity });
-      } catch (error) {
-        const axiosError = error as { response?: { status?: number } };
-        if (axiosError?.response?.status !== 401) {
-          console.error("Error updating server cart:", error);
+        const { cartId, productId } = getServerIds(item);
+        if (cartId && productId) {
+          console.log('🔄 Update server item:', {cartId, productId, count});
+          await updateCartMutation.mutateAsync({ cartId, productId, count });
+        } else {
+          console.warn('❌ Missing cartId/productId for update:', item);
         }
+      } catch (error) {
+        setError("Failed to update quantity");
+        console.error("Error updating server cart:", error);
       }
     }
-  };
+  }, [updateCount, isAuthenticated, token, serverCart, getServerIds, updateCartMutation, setError]);
 
-  const clear = async () => {
-    // Always clear local store
+  const clear = useCallback(async () => {
     clearCart();
-
-    // If user is logged in, also clear server cart
+    
     if (isAuthenticated && token) {
       try {
         await clearCartMutation.mutateAsync();
       } catch (error) {
-        const axiosError = error as { response?: { status?: number } };
-        if (axiosError?.response?.status !== 401) {
-          console.error("Error clearing server cart:", error);
-        }
+        console.error("Error clearing server cart:", error);
       }
     }
-  };
+  }, [clearCart, isAuthenticated, token, clearCartMutation]);
 
-  // Determine which cart to use based on authentication status
   const isUsingServerCart = isAuthenticated && !!token && serverCart?.products && serverCart.products.length > 0;
-  
-  // Get cart items and total
-  const cartItems = isUsingServerCart ? serverCart!.products : items;
-  const cartTotal = isUsingServerCart ? serverCart!.totalCartPrice : total;
-  
-  // Calculate cart count
-  const cartCount = isUsingServerCart 
-    ? serverCart!.products.reduce((sum: number, item: { count: number }) => sum + item.count, 0)
-    : items.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Get cart ID from server cart
-  const cartId = serverCart?._id;
+  const mappedServerItems = serverCart?.products?.map((item: any) => ({
+    id: item._id,
+    product: { 
+      ...item.product, 
+      priceAfterDiscount: item.product.priceAfterDiscount || item.price 
+    },
+    count: item.count || 1,
+    price: item.price || 0
+  })) || [];
+
+  const unifiedItems = isUsingServerCart ? mappedServerItems : localItems;
   
-  console.log('Server Cart:', serverCart);
-  console.log('Cart ID:', cartId);
+  const cartCount = unifiedItems.reduce((sum: number, item: CartItem) => sum + (item.count || 0), 0);
+  const cartId = serverCart?._id || '';
 
   return {
-    items: cartItems,
-    total: cartTotal,
+    items: unifiedItems,
+    total: isUsingServerCart ? (serverCart!.totalCartPrice || 0) : localTotal,
     cartCount,
     cartId,
     serverCart,
     isLoading: isAuthenticated && isLoading,
+    error,
+    loading: addToCartMutation.isPending || removeFromCartMutation.isPending || updateCartMutation.isPending || clearCartMutation.isPending,
     add,
     remove,
     update,

@@ -1,1 +1,12 @@
-# FreshCart Contact Page Fix - PageHeader Overlap&#10;&#10;## TODO Steps&#10;1. [x] Create TODO.md with plan steps&#10;2. [x] Edit app/contact/page.tsx: Adjust negative margin to `-mt-32 md:-mt-40` (first change applied)&#10;3. [ ] Fix broken section tag in app/contact/page.tsx from partial edit&#10;4. [ ] Update shared/components/layout/PageHeader.tsx with contentOffset prop&#10;5. [ ] Test with `npm run dev`&#10;6. [ ] Complete&#10;&#10;Progress: 2/6
+# Cart Page Fix - Progress Tracker
+
+## Plan Steps:
+
+- [x] 1. Update cart.types.ts - Unified CartItem interface with `id`, `product`, `count`
+- [x] 2. Fix cart.store.ts - Use `count`, handle cart item IDs
+- [x] 3. Fix useCart.ts hook - Consistent data mapping, proper ID usage, price fallback, error handling
+- [x] 4. Update app/cart/page.tsx - Use item IDs correctly, fix quantity/price display, add loading
+- [ ] 5. Test functionality: add/remove/update items, prices, delete buttons
+- [ ] 6. Complete & demo
+
+**Current status:** Starting implementation...

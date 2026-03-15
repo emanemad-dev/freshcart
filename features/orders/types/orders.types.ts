@@ -2,12 +2,31 @@
 import { CartItem } from '@/features/cart/types/cart.types';
 
 export interface Order {
-  id: string;
-  items: CartItem[];
-  total: number;
+  _id: string;
+  id?: string | number;
+  cartItems: CartItem[];
+  items?: CartItem[];
+  totalOrderPrice: number;
+  total?: number;
+  taxPrice?: number;
+  shippingPrice?: number;
+  paymentMethodType?: string;
+  isPaid: boolean;
+  isDelivered: boolean;
   status: OrderStatus;
   createdAt: string;
   updatedAt: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
+  shippingAddress: {
+    details: string;
+    phone: string;
+    city: string;
+  };
 }
 
 export type OrderStatus = 

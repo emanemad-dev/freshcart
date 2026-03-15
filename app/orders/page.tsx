@@ -1,11 +1,11 @@
 // Orders Page
-'use client';
+"use client";
 
-import { useOrders } from '@/features/orders/hooks/useOrders';
-import { OrderCard } from '@/features/orders/components/OrderCard';
-import { Loader } from '@/shared/components/ui/Loader';
-import { PageHeader } from '@/shared/components/layout/PageHeader';
-import { FaBox } from 'react-icons/fa';
+import { useOrders } from "@/features/orders/hooks/useOrders";
+import { OrderCard } from "@/features/orders/components/OrderCard";
+import { Loader } from "@/shared/components/ui/Loader";
+import { PageHeader } from "@/shared/components/layout/PageHeader";
+import { FaBox } from "react-icons/fa";
 
 export default function OrdersPage() {
   const { data, isLoading } = useOrders();
@@ -20,16 +20,17 @@ export default function OrdersPage() {
 
   return (
     <>
-      <PageHeader 
-        breadcrumbs={[{ label: 'Orders' }]}
+      <PageHeader
+        breadcrumbs={[{ label: "Orders" }]}
         title="My Orders"
         description="Track and manage your orders"
         icon={<FaBox />}
+        contentOffset="pb-24"
       />
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
           {data?.orders?.map((order) => (
-            <OrderCard key={order.id} order={order} />
+            <OrderCard key={order._id} order={order} />
           ))}
           {(!data?.orders || data.orders.length === 0) && (
             <p className="text-center text-gray-600 py-8">No orders yet</p>
@@ -39,4 +40,3 @@ export default function OrdersPage() {
     </>
   );
 }
-
