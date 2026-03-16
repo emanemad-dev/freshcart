@@ -30,9 +30,7 @@ export function PageHeader({
     : [{ label: "Home", href: "/" }, ...breadcrumbs];
 
   return (
-    <div
-      className={`${backgroundColor} py-12 ${contentOffset || "pb-32 md:pb-40"}`}
-    >
+    <div className={`${backgroundColor} py-12 `}>
       <div className="container mx-auto px-4">
         {finalBreadcrumbs.length > 0 && (
           <nav className="flex items-center gap-2 text-sm text-white/80 mb-4">

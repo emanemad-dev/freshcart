@@ -11,6 +11,8 @@ import {
   FaTruck,
   FaCheckCircle,
   FaClock,
+  FaCalendarAlt,
+  FaBoxes,
 } from "react-icons/fa";
 
 interface OrderCardProps {
@@ -20,7 +22,6 @@ interface OrderCardProps {
 export const OrderCard = ({ order }: OrderCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  /* -------- ORDER STATUS FROM API -------- */
   const getOrderStatus = () => {
     if (order.isDelivered) return "delivered";
     if (order.isPaid) return "processing";
@@ -30,11 +31,11 @@ export const OrderCard = ({ order }: OrderCardProps) => {
   const status = getOrderStatus();
 
   const statusColors: any = {
-    pending: "bg-yellow-50 text-yellow-600",
-    processing: "bg-orange-50 text-orange-600",
-    shipped: "bg-blue-50 text-blue-600",
-    delivered: "bg-emerald-50 text-emerald-600",
-    cancelled: "bg-red-50 text-red-600",
+    pending: "bg-yellow-100 text-yellow-700",
+    processing: "bg-orange-100 text-orange-700",
+    shipped: "bg-blue-100 text-blue-700",
+    delivered: "bg-emerald-100 text-emerald-700",
+    cancelled: "bg-red-100 text-red-700",
   };
 
   const statusIcons: any = {
@@ -60,16 +61,16 @@ export const OrderCard = ({ order }: OrderCardProps) => {
     ) || 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden">
       {/* HEADER */}
-      <div className="p-6 border-b border-gray-100">
+      <div className="p-6 border-b border-gray-200 bg-emerald-50">
         <div className="flex items-start justify-between">
           <div className="flex gap-4">
             {/* PRODUCT IMAGE */}
             <div className="relative">
               <img
                 src={order.cartItems?.[0]?.product?.imageCover}
-                className="w-16 h-16 rounded-xl object-cover"
+                className="w-16 h-16 rounded-xl object-cover border border-gray-200"
               />
 
               {order.cartItems?.length > 1 && (
@@ -84,28 +85,32 @@ export const OrderCard = ({ order }: OrderCardProps) => {
               {/* STATUS + ID */}
               <div className="flex items-center gap-3">
                 <span
-                  className={`px-3 py-1 text-xs rounded-full flex items-center gap-1 font-medium ${
-                    statusColors[status]
-                  }`}
+                  className={`px-3 py-1 text-xs rounded-full flex items-center gap-1 font-medium ${statusColors[status]}`}
                 >
                   {statusIcons[status]}
                   {status.charAt(0).toUpperCase() + status.slice(1)}
                 </span>
 
-                <span className="text-gray-400 text-sm">
+                <span className="text-gray-600 text-sm font-mono">
                   #{order.id || order._id?.slice(-5)}
                 </span>
               </div>
 
               {/* DATE + ITEMS */}
-              <div className="text-sm text-gray-400 flex items-center gap-2">
-                {formatDate(order.createdAt)}
+              <div className="text-sm text-gray-500 flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <FaCalendarAlt className="w-4 h-4 text-gray-400" />
+                  <span>{formatDate(order.createdAt)}</span>
+                </div>
                 <span>•</span>
-                {totalItems} items
+                <div className="flex items-center gap-1">
+                  <FaBoxes className="w-4 h-4 text-gray-400" />
+                  <span>{totalItems} items</span>
+                </div>
               </div>
 
               {/* LOCATION */}
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
+              <div className="flex items-center gap-2 text-gray-600 text-sm">
                 <FaMapMarkerAlt className="text-emerald-500 text-xs" />
                 <span>
                   {order.shippingAddress?.city} -{" "}
@@ -123,7 +128,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
           {/* TOGGLE BUTTON */}
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="bg-emerald-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:bg-emerald-600 transition"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition shadow"
           >
             {showDetails ? "Hide" : "Show"}
             {showDetails ? <FaChevronUp /> : <FaChevronDown />}
@@ -133,10 +138,10 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 
       {/* DETAILS */}
       {showDetails && (
-        <div className="p-6 space-y-6 bg-gray-50/40">
+        <div className="p-6 space-y-6 bg-gray-50 rounded-b-2xl">
           {/* ORDER ITEMS */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-gray-800">Order Items</h4>
+            <h4 className="font-semibold text-gray-800 text-lg">Order Items</h4>
 
             {order.cartItems?.map((item, index) => {
               const quantity = item.count || item.quantity || 1;
@@ -145,12 +150,12 @@ export const OrderCard = ({ order }: OrderCardProps) => {
               return (
                 <div
                   key={index}
-                  className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"
+                  className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100"
                 >
                   <div className="flex items-center gap-3">
                     <img
                       src={item.product?.imageCover}
-                      className="w-12 h-12 rounded-lg object-cover"
+                      className="w-12 h-12 rounded-lg object-cover border border-gray-200"
                     />
 
                     <div>
@@ -158,7 +163,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                         {item.product?.title}
                       </p>
 
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-500">
                         {quantity} × {item.price} EGP
                       </p>
                     </div>
@@ -175,53 +180,50 @@ export const OrderCard = ({ order }: OrderCardProps) => {
           {/* ADDRESS + SUMMARY */}
           <div className="grid md:grid-cols-2 gap-6">
             {/* ADDRESS */}
-            <div className="bg-white rounded-xl p-4 shadow-sm space-y-2">
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-2">
               <h4 className="font-semibold flex items-center gap-2 text-gray-800">
                 <FaMapMarkerAlt className="text-emerald-500" />
                 Delivery Address
               </h4>
 
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-600 text-sm">
                 {order.shippingAddress?.details}
               </p>
-
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-600 text-sm">
                 {order.shippingAddress?.city}
               </p>
 
               <div className="flex items-center gap-2 text-emerald-600 text-sm">
-                <FaPhone />
+                <FaPhone className="w-4 h-4" />
                 {order.shippingAddress?.phone}
               </div>
             </div>
 
             {/* SUMMARY */}
-            <div className="bg-amber-50 rounded-xl p-4 shadow-sm space-y-3">
+            <div className="bg-amber-50 rounded-xl p-4 shadow-sm border border-amber-100 space-y-3">
               <h4 className="font-semibold flex items-center gap-2 text-gray-800">
                 <FaBox className="text-amber-500" />
                 Order Summary
               </h4>
 
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Subtotal</span>
+              <div className="flex justify-between text-sm text-gray-700">
+                <span>Subtotal</span>
                 <span>{order.totalOrderPrice?.toLocaleString()} EGP</span>
               </div>
 
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Shipping</span>
+              <div className="flex justify-between text-sm text-gray-700">
+                <span>Shipping</span>
                 <span>{order.shippingPrice} EGP</span>
               </div>
 
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Tax</span>
+              <div className="flex justify-between text-sm text-gray-700">
+                <span>Tax</span>
                 <span>{order.taxPrice} EGP</span>
               </div>
 
-              <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold">
+              <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-gray-900">
                 <span>Total</span>
-                <span className="text-gray-900">
-                  {order.totalOrderPrice?.toLocaleString()} EGP
-                </span>
+                <span>{order.totalOrderPrice?.toLocaleString()} EGP</span>
               </div>
             </div>
           </div>
