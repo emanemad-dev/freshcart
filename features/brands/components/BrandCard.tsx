@@ -16,56 +16,37 @@ export const BrandCard = ({ brand }: BrandCardProps) => {
   return (
     <Link href={`/brands/${safeBrand._id || ""}`} className="block">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -10, scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 300 }}
-        className="group bg-gradient-to-br from-white to-purple-50/50 backdrop-blur-sm border border-white/30 shadow-xl hover:shadow-2xl hover:border-purple-400/50 rounded-3xl overflow-hidden transition-all duration-500"
+        whileHover={{ scale: 1.04 }}
+        transition={{ type: "spring", stiffness: 250 }}
+        className="group relative bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
       >
-        {/* Logo Container */}
-        <div className="relative h-48 md:h-52 p-8 bg-gradient-to-b from-purple-50 to-transparent">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent" />
+        {/* Image */}
+        <div className="relative h-28 md:h-32 flex items-center justify-center bg-gray-50 p-4">
           {safeBrand.image ? (
             <Image
               src={safeBrand.image}
               alt={safeBrand.name || "Brand"}
               fill
-              className="object-contain group-hover:scale-110 transition-transform duration-700"
-              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-contain p-3 transition-transform duration-300 group-hover:scale-110"
             />
           ) : (
-            <div className="h-full w-full bg-purple-100 rounded-2xl flex items-center justify-center">
-              <FaStore className="w-24 h-24 text-purple-400" />
-            </div>
+            <FaStore className="text-gray-400 w-10 h-10" />
           )}
+
+          {/* Hover Text */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="flex items-center gap-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-green-600 text-sm font-semibold shadow">
+              Show Products
+              <FaArrowRight className="text-xs" />
+            </div>
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6 md:p-8">
-          <h3 className="font-bold text-xl md:text-2xl text-gray-800 mb-2 group-hover:text-purple-600 transition-colors line-clamp-1">
-            {safeBrand.name || "Brand Name"}
+        {/* Brand Name */}
+        <div className="py-3 text-center">
+          <h3 className="text-sm md:text-base font-medium text-gray-700 line-clamp-1">
+            {safeBrand.name || "Brand"}
           </h3>
-
-          {/* Brand Stats */}
-          <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <span>★ 4.8</span>
-            <span>150+ Products</span>
-          </div>
-
-          {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-600/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
-            <FaStore className="w-16 h-16 text-white mb-4 animate-bounce" />
-            <h4 className="text-2xl font-bold text-white mb-2">
-              Explore Collection
-            </h4>
-            <p className="text-purple-100 text-lg mb-6">
-              Discover amazing products
-            </p>
-            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-2xl font-semibold text-white hover:bg-white/30 transition-all">
-              Shop Now{" "}
-              <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
         </div>
       </motion.div>
     </Link>

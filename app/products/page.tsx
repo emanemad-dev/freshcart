@@ -88,7 +88,7 @@ function ProductsContent() {
               <p className="text-gray-500 mb-8 max-w-md mx-auto">
                 Try adjusting your search or filters.
               </p>
-              <Button asChild size="lg" className="mx-auto">
+              <Button size="lg" className="mx-auto">
                 <Link href="/products">Browse All Products</Link>
               </Button>
             </div>

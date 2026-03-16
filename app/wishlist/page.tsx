@@ -4,24 +4,28 @@ import Link from "next/link";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { motion } from "framer-motion";
-import { FaShoppingBag, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
+import { useState } from "react";
+import { FaHeart, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
+import { Modal } from "@/shared/components/ui/Modal";
+import { Button } from "@/shared/components/ui/Button";
 
 export default function WishlistPage() {
   const { items, remove, clear } = useWishlist();
   const { add: addToCart } = useCart();
+  const [showClearModal, setShowClearModal] = useState(false);
 
-  const handleClearAll = () => {
-    if (confirm("Are you sure you want to clear your wishlist?")) {
-      clear();
-    }
+  const handleClearAll = () => setShowClearModal(true);
+  const confirmClearAll = () => {
+    clear();
+    setShowClearModal(false);
   };
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-gray-500">
-        <FaShoppingBag className="w-12 h-12 mb-4 text-emerald-500" />
-        <h2 className="text-xl font-semibold mb-2">Your wishlist is empty</h2>
-        <p className="text-sm">
+      <div className="flex flex-col items-center justify-center py-24 text-gray-500 px-4">
+        <FaHeart className="w-16 h-16 mb-4 text-red-500" />
+        <h2 className="text-2xl font-semibold mb-2">Your wishlist is empty</h2>
+        <p className="text-sm text-center max-w-xs">
           Browse products and add them to your wishlist.
         </p>
         <Link
@@ -36,11 +40,11 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="container mx-auto px-5 py-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-10">
         <nav className="text-sm text-gray-400 mb-4">
-          <ol className="flex items-center gap-2">
+          <ol className="flex items-center gap-2 flex-wrap">
             <li>Home</li>
             <li>/</li>
             <li className="text-gray-700 font-semibold">My Wishlist</li>
@@ -48,8 +52,8 @@ export default function WishlistPage() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 flex items-center justify-center bg-emerald-100 rounded-lg">
-            <FaShoppingBag className="w-6 h-6 text-emerald-600" />
+          <div className="w-12 h-12 flex items-center justify-center bg-red-100 rounded-lg">
+            <FaHeart className="w-6 h-6 text-red-600" />
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 mb-1">
@@ -64,7 +68,7 @@ export default function WishlistPage() {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-2xl shadow-md">
+        <table className="min-w-full bg-white border border-gray-200 rounded-2xl shadow-sm">
           <thead>
             <tr className="bg-emerald-500 text-white">
               <th className="px-5 py-4 text-left text-sm font-semibold uppercase rounded-tl-2xl">
@@ -170,7 +174,7 @@ export default function WishlistPage() {
                     </div>
                   </td>
                   <td className="px-5 py-4 text-right">
-                    <div className="flex items-center gap-2 justify-end">
+                    <div className="flex items-center gap-2 justify-end flex-wrap sm:flex-nowrap">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -182,7 +186,11 @@ export default function WishlistPage() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => remove(item.id)}
+                        onClick={() =>
+                          remove(
+                            item.product?._id || item.product?.id || item.id,
+                          )
+                        }
                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg hover:shadow transition"
                         title="Remove from wishlist"
                       >
@@ -196,25 +204,51 @@ export default function WishlistPage() {
         </table>
 
         {/* Footer Buttons */}
-        {items.length > 0 && (
-          <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
-            <button
-              onClick={handleClearAll}
-              className="flex items-center gap-2 text-red-600 hover:text-red-800 font-medium text-sm"
-            >
-              <FaTrashAlt className="w-4 h-4" />
-              Clear All ({items.length})
-            </button>
+        <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <button
+            onClick={handleClearAll}
+            className="flex items-center gap-2 text-red-600 hover:text-red-800 font-medium text-sm"
+          >
+            <FaTrashAlt className="w-4 h-4" />
+            Clear All ({items.length})
+          </button>
 
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl font-medium shadow transition"
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl font-medium shadow transition"
+          >
+            <FaShoppingCart className="w-4 h-4" />
+            Continue Shopping
+          </Link>
+        </div>
+
+        {/* Modal */}
+        <Modal
+          isOpen={showClearModal}
+          onClose={() => setShowClearModal(false)}
+          title="Clear Wishlist?"
+        >
+          <p className="text-gray-600 mb-6">
+            Are you sure you want to remove {items.length} item(s) from your
+            wishlist? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-end flex-wrap sm:flex-nowrap">
+            <Button
+              variant="outline"
+              onClick={() => setShowClearModal(false)}
+              className="px-6"
             >
-              <FaShoppingCart className="w-4 h-4" />
-              Continue Shopping
-            </Link>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmClearAll}
+              className="px-6 bg-red-500 hover:bg-red-600"
+            >
+              Clear All
+            </Button>
           </div>
-        )}
+        </Modal>
       </div>
     </div>
   );
