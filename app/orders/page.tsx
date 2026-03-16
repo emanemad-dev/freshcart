@@ -4,8 +4,7 @@
 import { useOrders } from "@/features/orders/hooks/useOrders";
 import { OrderCard } from "@/features/orders/components/OrderCard";
 import { Loader } from "@/shared/components/ui/Loader";
-import { PageHeader } from "@/shared/components/layout/PageHeader";
-import { FaBox } from "react-icons/fa";
+import { FaShoppingBag } from "react-icons/fa";
 
 export default function OrdersPage() {
   const { data, isLoading } = useOrders();
@@ -19,24 +18,42 @@ export default function OrdersPage() {
   }
 
   return (
-    <>
-      <PageHeader
-        breadcrumbs={[{ label: "Orders" }]}
-        title="My Orders"
-        description="Track and manage your orders"
-        icon={<FaBox />}
-        contentOffset="pb-24"
-      />
-      <div className="container mx-auto px-4 py-8">
-        <div className="space-y-4">
-          {data?.orders?.map((order) => (
-            <OrderCard key={order._id} order={order} />
-          ))}
-          {(!data?.orders || data.orders.length === 0) && (
-            <p className="text-center text-gray-600 py-8">No orders yet</p>
-          )}
+    <div className="container mx-auto px-5 py-8">
+      {/* PAGE HEADER */}
+      <div className="mb-8">
+        {/* Breadcrumbs */}
+        <nav className="text-sm text-gray-400 mb-2">
+          <ol className="flex items-center gap-2">
+            <li>Home</li>
+            <li>/</li>
+            <li className="text-gray-700 font-semibold">My Orders</li>
+          </ol>
+        </nav>
+
+        {/* Title + Description + Icon */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 flex items-center justify-center  bg-emerald-100">
+            <FaShoppingBag className="w-6 h-6 text-emerald-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
+            <p className="text-gray-500 text-sm">
+              Track and manage your orders
+            </p>
+          </div>
         </div>
       </div>
-    </>
+
+      {/* ORDERS LIST */}
+      <div className="space-y-4">
+        {data?.orders?.length ? (
+          data.orders.map((order) => (
+            <OrderCard key={order._id} order={order} />
+          ))
+        ) : (
+          <p className="text-center text-gray-600 py-8">No orders yet</p>
+        )}
+      </div>
+    </div>
   );
 }

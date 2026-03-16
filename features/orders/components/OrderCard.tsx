@@ -20,7 +20,16 @@ interface OrderCardProps {
 export const OrderCard = ({ order }: OrderCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  const statusColors = {
+  /* -------- ORDER STATUS FROM API -------- */
+  const getOrderStatus = () => {
+    if (order.isDelivered) return "delivered";
+    if (order.isPaid) return "processing";
+    return "pending";
+  };
+
+  const status = getOrderStatus();
+
+  const statusColors: any = {
     pending: "bg-yellow-50 text-yellow-600",
     processing: "bg-orange-50 text-orange-600",
     shipped: "bg-blue-50 text-blue-600",
@@ -28,7 +37,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
     cancelled: "bg-red-50 text-red-600",
   };
 
-  const statusIcons = {
+  const statusIcons: any = {
     pending: <FaClock className="w-3 h-3" />,
     processing: <FaBox className="w-3 h-3" />,
     shipped: <FaTruck className="w-3 h-3" />,
@@ -56,7 +65,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-start justify-between">
           <div className="flex gap-4">
-            {/* product image */}
+            {/* PRODUCT IMAGE */}
             <div className="relative">
               <img
                 src={order.cartItems?.[0]?.product?.imageCover}
@@ -70,16 +79,17 @@ export const OrderCard = ({ order }: OrderCardProps) => {
               )}
             </div>
 
-            {/* order info */}
-            <div className="space-y-1">
+            {/* ORDER INFO */}
+            <div className="space-y-2">
+              {/* STATUS + ID */}
               <div className="flex items-center gap-3">
                 <span
                   className={`px-3 py-1 text-xs rounded-full flex items-center gap-1 font-medium ${
-                    statusColors[order.status]
+                    statusColors[status]
                   }`}
                 >
-                  {statusIcons[order.status]}
-                  {order.status}
+                  {statusIcons[status]}
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
                 </span>
 
                 <span className="text-gray-400 text-sm">
@@ -87,19 +97,30 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                 </span>
               </div>
 
+              {/* DATE + ITEMS */}
               <div className="text-sm text-gray-400 flex items-center gap-2">
                 {formatDate(order.createdAt)}
                 <span>•</span>
                 {totalItems} items
               </div>
 
+              {/* LOCATION */}
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <FaMapMarkerAlt className="text-emerald-500 text-xs" />
+                <span>
+                  {order.shippingAddress?.city} -{" "}
+                  {order.shippingAddress?.details}
+                </span>
+              </div>
+
+              {/* PRICE */}
               <div className="text-2xl font-bold text-gray-900">
                 {order.totalOrderPrice?.toLocaleString()} EGP
               </div>
             </div>
           </div>
 
-          {/* toggle button */}
+          {/* TOGGLE BUTTON */}
           <button
             onClick={() => setShowDetails(!showDetails)}
             className="bg-emerald-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:bg-emerald-600 transition"
@@ -176,7 +197,10 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 
             {/* SUMMARY */}
             <div className="bg-amber-50 rounded-xl p-4 shadow-sm space-y-3">
-              <h4 className="font-semibold text-gray-800">Order Summary</h4>
+              <h4 className="font-semibold flex items-center gap-2 text-gray-800">
+                <FaBox className="text-amber-500" />
+                Order Summary
+              </h4>
 
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Subtotal</span>
@@ -185,7 +209,12 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Shipping</span>
-                <span className="text-emerald-600">Free</span>
+                <span>{order.shippingPrice} EGP</span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Tax</span>
+                <span>{order.taxPrice} EGP</span>
               </div>
 
               <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold">

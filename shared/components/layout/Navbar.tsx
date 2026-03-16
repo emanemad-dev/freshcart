@@ -12,6 +12,7 @@ import {
   FaSearch,
   FaShoppingCart,
   FaBox,
+  FaShoppingBag,
   FaChevronDown,
   FaHeart,
   FaSignInAlt,
@@ -242,7 +243,7 @@ export const Navbar = () => {
                   href="/orders"
                   className="p-2 rounded-lg hover:bg-emerald-50 transition-all"
                 >
-                  <FaBox className="w-5 h-5 text-gray-700 hover:text-emerald-600" />
+                  <FaShoppingBag className="w-5 h-5 text-gray-700 hover:text-emerald-600" />
                 </Link>
               </div>
 
@@ -303,7 +304,7 @@ export const Navbar = () => {
                           className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 transition-colors text-sm"
                           onClick={() => setProfileModalOpen(false)}
                         >
-                          <FaBox className="w-4 text-emerald-600" />
+                          <FaShoppingBag className="w-4 text-emerald-600" />
                           Orders
                         </Link>
                         <Link
@@ -465,7 +466,7 @@ export const Navbar = () => {
                     className="block py-3 px-4 text-base font-semibold text-gray-800 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all flex items-center gap-3"
                     onClick={handleLinkClick}
                   >
-                    <FaBox className="text-emerald-500" />
+                    <FaShoppingBag className="text-emerald-500" />
                     Orders
                   </Link>
 
