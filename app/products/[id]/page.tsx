@@ -1,44 +1,56 @@
-// Product Detail Page
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useProduct } from '@/features/products/hooks/useProducts';
-import { ProductDetails } from '@/features/products/components/ProductDetails';
-import { useCart } from '@/features/cart/hooks/useCart';
-import { useWishlist } from '@/features/wishlist/hooks/useWishlist';
-import { Loader } from '@/shared/components/ui/Loader';
+import { useState } from "react";
+import { ProductDetailHero } from "./ProductDetailHero";
+import { ProductMainSection } from "./components/ProductMainSection";
+import { ProductTabs } from "./components/ProductTabs";
+import { useParams } from "next/navigation";
+import { useProduct } from "@/features/products/hooks/useProducts";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import type { Product } from "@/features/products/types/product.types";
+import type { User } from "@/features/auth/types/auth.types";
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const id = params?.id as string;
-  const { data: product, isLoading } = useProduct(id);
-  const { add: addToCart } = useCart();
-  const { add: addToWishlist, isInWishlist } = useWishlist();
+  const id = params.id as string;
+  const productQuery = useProduct(id);
+  const { data: product, isLoading } = productQuery;
+  const { user } = useAuth();
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState<
+    "details" | "reviews" | "shipping"
+  >("details");
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader size="lg" />
+        Loading...
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <p>Product not found</p>
+      <div className="flex items-center justify-center min-h-screen">
+        Product not found
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <ProductDetails
+    <div className=" mx-auto px-4 py-8 space-y-8">
+      <ProductDetailHero product={product} />
+      <ProductMainSection
         product={product}
-        onAddToCart={addToCart}
-        onAddToWishlist={addToWishlist}
+        quantity={quantity}
+        onQuantityChange={setQuantity}
+      />
+      <ProductTabs
+        product={product}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        currentUser={user}
       />
     </div>
   );
 }
-
