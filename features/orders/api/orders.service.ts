@@ -49,7 +49,7 @@ export const ordersService = {
     shippingAddress: ShippingAddress,
   ): Promise<{ url: string }> {
     const response = await axios.post(
-      `/api/v1/orders/checkout-session/${cartId}?url=${url}`,
+      `/orders/checkout-session/${cartId}?url=${url}`,
       {
         shippingAddress,
       },

@@ -14,6 +14,7 @@ import {
   FaExclamationTriangle,
   FaLock,
   FaTruck,
+  FaBoxOpen,
 } from "react-icons/fa";
 
 const getCartItemKey = (item: any): string => {
@@ -129,7 +130,7 @@ export default function CartPage() {
 
   const confirmDeleteItem = () => {
     if (deleteItemId) {
-      remove(deleteItemId);
+      remove(deleteItemId); // Now passes string itemId correctly
       setDeleteItemId(null);
     }
   };
@@ -149,33 +150,23 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <PageHeader
-          breadcrumbs={[{ label: "Cart" }]}
-          title="Shopping Cart"
-          description="Review your items"
-          icon={<FaShoppingCart className="text-3xl" />}
-          backgroundColor="bg-gradient-to-r from-emerald-600 to-green-600"
-          contentOffset="pb-24"
-        />
-
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-2xl mx-auto text-center bg-white rounded-2xl p-12 shadow-sm">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FaShoppingCart className="text-4xl text-gray-400" />
-            </div>
-            <h2 className="text-2xl font-bold mb-3">Your cart is empty</h2>
-            <p className="text-gray-500 mb-8">
-              Add some items to your cart to continue shopping
-            </p>
-            <button
-              onClick={handleContinueShopping}
-              className="bg-emerald-500 text-white px-8 py-3 rounded-xl hover:bg-emerald-600 transition font-semibold"
-            >
-              Continue Shopping
-            </button>
-          </div>
+      <div className="flex flex-col items-center justify-center py-24 text-gray-500 px-4">
+        <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <FaBoxOpen className="text-5xl text-emerald-500" />
         </div>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">
+          Your cart is empty
+        </h2>
+        <p className="text-gray-500 mb-8 text-sm">
+          Browse our products and add some items to your cart to start shopping.
+        </p>
+        <Link
+          href="/products"
+          className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white rounded-xl shadow hover:bg-emerald-600 transition"
+        >
+          <FaShoppingCart />
+          Continue Shopping
+        </Link>
       </div>
     );
   }

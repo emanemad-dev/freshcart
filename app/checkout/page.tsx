@@ -12,11 +12,14 @@ import {
   PaymentMethod,
   OrderSummary,
 } from "@/features/checkout/components";
-import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
+import { Address } from "@/features/addresses/types/addresses.types";
+import { FaArrowLeft, FaShoppingCart, FaTruck } from "react-icons/fa";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
+
+  // 🛒 Use cart hook and get `clear`
   const {
     items,
     total,
@@ -24,7 +27,9 @@ export default function CheckoutPage() {
     cartId,
     serverCart,
     isLoading: cartLoading,
+    clear, // <-- هنا
   } = useCart();
+
   const { createOrder, isLoading: checkoutLoading } = useCheckout();
 
   const [formData, setFormData] = useState({
@@ -34,9 +39,9 @@ export default function CheckoutPage() {
     paymentMethod: "cash" as "cash" | "card",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [isReady, setIsReady] = useState(false);
 
-  // Handle redirects after component mounts to avoid React render error
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login");
@@ -78,31 +83,42 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      try {
-        console.log("Submitting order with cartId:", cartId);
-        console.log("Form data:", formData);
 
-        if (!cartId) {
-          alert("Cart not found. Please add items to your cart and try again.");
-          return;
-        }
+    let orderData = { ...formData };
 
-        // Use cartId from the server cart
-        await createOrder(formData, cartId);
-      } catch (error) {
-        console.error("Error submitting order:", error);
-        alert("Failed to place order. Please try again.");
+    if (selectedAddress) {
+      orderData = {
+        city: selectedAddress.city,
+        street: selectedAddress.details,
+        phone: selectedAddress.phone,
+        paymentMethod: formData.paymentMethod,
+      };
+    }
+
+    if (!orderData.city || !orderData.street || !orderData.phone) {
+      alert("Please provide a valid shipping address.");
+      return;
+    }
+
+    try {
+      if (!cartId) {
+        alert("Cart not found. Please add items to your cart and try again.");
+        return;
       }
+
+      await createOrder(orderData, cartId);
+
+      clear();
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      alert("Failed to place order. Please try again.");
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handlePaymentChange = (method: "cash" | "card") => {
@@ -114,11 +130,13 @@ export default function CheckoutPage() {
       <PageHeader
         breadcrumbs={[
           { label: "Home", href: "/" },
-          { label: "Cart", href: "/cart" },
+          { label: "Shopping Cart", href: "/cart" },
           { label: "Checkout" },
         ]}
-        title="Complete Your Order"
-        icon={<FaShoppingCart />}
+        title="Review & Complete Your Order"
+        description="Almost there! Review your items, confirm your shipping details, and choose your payment method. 
+  We’ll make sure your order reaches you safely and quickly. 🚚✨"
+        icon={<FaTruck className="text-green-600" />}
       />
 
       <div className="container mx-auto px-4 py-8">
@@ -138,6 +156,8 @@ export default function CheckoutPage() {
                 formData={formData}
                 errors={errors}
                 onChange={handleInputChange}
+                setFormData={setFormData}
+                setSelectedAddress={setSelectedAddress}
               />
 
               <PaymentMethod
