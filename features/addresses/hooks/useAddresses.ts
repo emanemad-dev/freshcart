@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { addressesService, CreateAddressData } from '../api/addresses.service';
+import { addressesService, CreateAddressData, type Address } from '../api/addresses.service';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 
 export const useAddresses = () => {
@@ -36,7 +36,35 @@ export const useUpdateAddress = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: CreateAddressData }) =>
       addressesService.updateAddress(id, data),
-    onSuccess: () => {
+    onMutate: async ({ id, data }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['addresses'] });
+
+      // Snapshot previous value
+      const previousAddresses = queryClient.getQueryData<{ data: Address[] }>(['addresses']);
+
+      // Optimistically update
+      queryClient.setQueryData<{ data: Address[] }>(['addresses'], (old) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: old.data.map((addr) =>
+            addr._id === id ? { ...addr, ...data } : addr
+          ),
+        };
+      });
+
+      // Return context for rollback
+      return { previousAddresses };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousAddresses) {
+        queryClient.setQueryData(['addresses'], context.previousAddresses);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after
       queryClient.invalidateQueries({ queryKey: ['addresses'] });
     },
   });

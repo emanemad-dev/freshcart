@@ -9,6 +9,9 @@ import {
   FiPlus,
   FiLock,
   FiUser,
+  FiEye,
+  FiEyeOff,
+  FiSave,
 } from "react-icons/fi";
 
 import { Input } from "@/shared/components/ui/Input";
@@ -38,15 +41,20 @@ export default function ProfilePage() {
   const updateMutation = useUpdateAddress();
   const deleteMutation = useDeleteAddress();
 
-  const [activeTab, setActiveTab] = useState<
-    "profile" | "addresses" | "settings"
-  >("profile");
+  const authUser = useAuthStore((state) => state.user);
+
+  const [activeTab, setActiveTab] = useState<"addresses" | "settings">(
+    "addresses",
+  );
 
   const [showModal, setShowModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
-    null,
-  );
+
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
 
   const [addressForm, setAddressForm] = useState<CreateAddressData>({
     name: "",
@@ -55,21 +63,16 @@ export default function ProfilePage() {
     city: "",
   });
 
-  const [passwordForm, setPasswordForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-
-  const authUser = useAuthStore((state) => state.user);
   const [profileForm, setProfileForm] = useState({
     name: authUser?.name || "",
     email: authUser?.email || "",
     phone: "",
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const handleOpenModal = (address?: Address) => {
@@ -82,45 +85,70 @@ export default function ProfilePage() {
       });
       setEditingAddress(address);
     } else {
-      setAddressForm({ name: "", details: "", phone: "", city: "" });
+      setAddressForm({
+        name: "",
+        details: "",
+        phone: "",
+        city: "",
+      });
       setEditingAddress(null);
     }
+
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingAddress(null);
-    setAddressForm({ name: "", details: "", phone: "", city: "" });
   };
 
   const handleSubmitAddress = (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log("=== Address Update Debug ===");
+    console.log("Editing:", editingAddress?._id, "New name:", addressForm.name);
+
     if (editingAddress) {
       updateMutation.mutate(
         { id: editingAddress._id, data: addressForm },
-        { onSuccess: () => handleCloseModal() },
+        {
+          onSuccess: () => {
+            console.log(
+              "Update success! Addresses after:",
+              addresses.map((a) => ({ id: a._id, name: a.name })),
+            );
+            handleCloseModal();
+          },
+          onError: (error) => {
+            console.error("Update error:", error);
+          },
+        },
       );
     } else {
       createMutation.mutate(addressForm, {
-        onSuccess: () => handleCloseModal(),
+        onSuccess: handleCloseModal,
       });
     }
   };
 
   const handleDeleteAddress = (id: string) => {
-    deleteMutation.mutate(id, { onSuccess: () => setShowDeleteConfirm(null) });
+    if (confirm("Delete this address?")) {
+      deleteMutation.mutate(id);
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       alert("Passwords don't match");
       return;
     }
+
     try {
       const token = useAuthStore.getState().token;
-      const response = await fetch(
+
+      await fetch(
         "https://ecommerce.routemisr.com/api/v1/users/changeMyPassword",
         {
           method: "PUT",
@@ -135,8 +163,9 @@ export default function ProfilePage() {
           }),
         },
       );
-      if (!response.ok) throw new Error("Failed to update password");
-      alert("Password updated successfully");
+
+      alert("Password updated");
+
       setPasswordForm({
         currentPassword: "",
         newPassword: "",
@@ -152,224 +181,153 @@ export default function ProfilePage() {
       <PageHeader
         breadcrumbs={[{ label: "Profile" }]}
         title="My Account"
-        description="Manage your account and addresses."
+        description="Manage your account"
         icon={<FiUser className="text-3xl" />}
       />
 
-      <section className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid lg:grid-cols-[260px_1fr] gap-10">
+      <section className="bg-gradient-to-b from-gray-50 to-white py-10 min-h-screen">
+        <div className="px-4">
+          <div className="grid lg:grid-cols-[250px_1fr] gap-10 items-start">
             {/* Sidebar */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 h-fit shadow-sm">
-              <h3 className="text-lg font-semibold mb-6">Account</h3>
 
-              <button
-                onClick={() => setActiveTab("profile")}
-                className={`flex items-center gap-3 w-full p-3 rounded-xl transition mb-2 ${
-                  activeTab === "profile"
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "hover:bg-gray-50 text-gray-600"
-                }`}
-              >
-                <FiUser /> Profile
-              </button>
+            <div className="bg-white border border-gray-200 rounded-xl p-4 h-fit">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                My Account
+              </h3>
 
-              <button
-                onClick={() => setActiveTab("addresses")}
-                className={`flex items-center gap-3 w-full p-3 rounded-xl transition mb-2 ${
-                  activeTab === "addresses"
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "hover:bg-gray-50 text-gray-600"
-                }`}
-              >
-                <FiMapPin /> Addresses
-              </button>
+              {[
+                { key: "addresses", label: "My Addresses", icon: FiMapPin },
+                { key: "settings", label: "Settings", icon: FiLock },
+              ].map((item) => {
+                const Icon = item.icon;
 
-              <button
-                onClick={() => setActiveTab("settings")}
-                className={`flex items-center gap-3 w-full p-3 rounded-xl transition ${
-                  activeTab === "settings"
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "hover:bg-gray-50 text-gray-600"
-                }`}
-              >
-                <FiLock /> Security
-              </button>
+                return (
+                  <button
+                    key={item.key}
+                    onClick={() => setActiveTab(item.key as any)}
+                    className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition mb-2
+                    ${
+                      activeTab === item.key
+                        ? "bg-green-100 text-green-700"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-green-600"
+                    }`}
+                  >
+                    <Icon className="text-lg" />
+                    {item.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Content */}
-            <div>
-              {/* Profile Tab */}
-              {activeTab === "profile" && (
-                <div className="max-w-xl">
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900">
-                      Profile Information
-                    </h2>
-                    <p className="text-gray-500">
-                      Update your personal details
-                    </p>
-                  </div>
 
-                  <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-xl font-semibold">Personal Info</h3>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsEditingProfile(!isEditingProfile)}
-                      >
-                        {isEditingProfile ? "Cancel" : "Edit"}
-                      </Button>
-                    </div>
+            <div className="space-y-8">
+              {/* ADDRESSES */}
 
-                    {isEditingProfile ? (
-                      <form className="space-y-5">
-                        <Input
-                          label="Full Name"
-                          value={profileForm.name}
-                          onChange={(e) =>
-                            setProfileForm({
-                              ...profileForm,
-                              name: e.target.value,
-                            })
-                          }
-                          className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                        />
-                        <Input
-                          label="Email Address"
-                          value={profileForm.email}
-                          onChange={(e) =>
-                            setProfileForm({
-                              ...profileForm,
-                              email: e.target.value,
-                            })
-                          }
-                          className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                        />
-                        <Input
-                          label="Phone Number"
-                          value={profileForm.phone}
-                          onChange={(e) =>
-                            setProfileForm({
-                              ...profileForm,
-                              phone: e.target.value,
-                            })
-                          }
-                          placeholder="01xxxxxxxxx"
-                          className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                        />
-                        <div className="flex gap-3">
-                          <Button
-                            type="button"
-                            className="flex-1"
-                            variant="outline"
-                            onClick={() => setIsEditingProfile(false)}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            type="button"
-                            className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600"
-                            onClick={async () => {
-                              try {
-                                const token =
-                                  localStorage.getItem("token") ||
-                                  useAuthStore.getState().token;
-                                const response = await fetch(
-                                  "https://ecommerce.routemisr.com/api/v1/users/updateMe",
-                                  {
-                                    method: "PUT",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                      token: token,
-                                    },
-                                    body: JSON.stringify(profileForm),
-                                  },
-                                );
-
-                                if (!response.ok) {
-                                  const error = await response.json();
-                                  throw new Error(
-                                    error.message || "Update failed",
-                                  );
-                                }
-
-                                alert("Profile updated successfully!");
-                                setIsEditingProfile(false);
-                              } catch (error: any) {
-                                alert(
-                                  error.message || "Error updating profile",
-                                );
-                              }
-                            }}
-                          >
-                            Save Changes
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <div className="space-y-4 text-lg">
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                          <FiUser className="text-gray-400" />
-                          <span>{authUser?.name || "No name set"}</span>
-                        </div>
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                          <FiMapPin className="text-gray-400" />
-                          <span>{authUser?.email || "No email set"}</span>
-                        </div>
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                          <FiMapPin className="text-gray-400" />
-                          <span>{profileForm.phone || "No phone set"}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Addresses Tab */}
               {activeTab === "addresses" && (
                 <div>
-                  <div className="flex items-center justify-between mb-10">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <div>
-                      <h2 className="text-3xl font-bold text-gray-900">
-                        Saved Addresses
-                      </h2>
-                      <p className="text-gray-500">
-                        Manage your shipping locations
+                      <h2 className="text-xl font-semibold">My Addresses</h2>
+                      <p className="text-sm text-gray-500">
+                        Manage your saved delivery addresses
                       </p>
                     </div>
+
                     <Button
                       onClick={() => handleOpenModal()}
-                      className="flex items-center gap-2"
+                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition"
                     >
-                      <FiPlus /> Add Address
+                      <FiPlus />
+                      Add Address
                     </Button>
                   </div>
 
                   {isLoading ? (
-                    <p>Loading...</p>
-                  ) : (
-                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {addresses.map((address) => (
-                        <motion.div
-                          key={address._id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {[1, 2, 3, 4].map((item) => (
+                        <div
+                          key={item}
+                          className="bg-white border border-gray-200 rounded-xl p-5 animate-pulse"
                         >
-                          <div className="flex justify-between items-start mb-4">
-                            <div className="flex gap-3 items-center">
-                              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                                <FiMapPin className="text-emerald-600" />
+                          <div className="flex gap-3">
+                            <div className="w-9 h-9 bg-gray-200 rounded-lg"></div>
+                            <div className="flex-1 space-y-2">
+                              <div className="h-3 bg-gray-200 rounded w-32"></div>
+                              <div className="h-3 bg-gray-200 rounded w-24"></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : addresses.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <FiMapPin className="text-4xl text-gray-300 mb-3" />
+
+                      <h3 className="font-semibold text-gray-700 mb-1">
+                        No addresses yet
+                      </h3>
+
+                      <p className="text-sm text-gray-500 mb-4">
+                        Add your first delivery address
+                      </p>
+
+                      <Button
+                        onClick={() => handleOpenModal()}
+                        className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                      >
+                        <FiPlus />
+                        Add Address
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {addresses.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center col-span-2">
+                          <FiMapPin className="text-4xl text-gray-300 mb-3" />
+                          <h3 className="font-semibold text-gray-700 mb-1">
+                            No addresses yet
+                          </h3>
+                          <p className="text-sm text-gray-500 mb-4">
+                            Add your first delivery address
+                          </p>
+                          <Button
+                            onClick={() => handleOpenModal()}
+                            className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                          >
+                            <FiPlus /> Add Address
+                          </Button>
+                        </div>
+                      ) : (
+                        addresses.map((address) => (
+                          <motion.div
+                            key={address._id}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            whileHover={{ y: -3 }}
+                            transition={{ duration: 0.25 }}
+                            className="group bg-white border border-gray-200 rounded-xl p-5 flex justify-between items-start hover:shadow-lg hover:border-green-300 transition-all duration-300"
+                          >
+                            <div className="flex gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">
+                                <FiMapPin className="text-green-600 text-sm" />
                               </div>
+
                               <div>
-                                <h4 className="font-semibold">
+                                <h4 className="text-sm font-semibold text-gray-900">
                                   {address.name}
                                 </h4>
-                                <p className="text-sm text-gray-500">
+                                {updateMutation.isPending &&
+                                  address._id === editingAddress?._id && (
+                                    <span className="text-xs text-blue-500 ml-2">
+                                      Updating...
+                                    </span>
+                                  )}
+
+                                <p className="text-xs text-gray-500">
+                                  {address.phone}
+                                </p>
+                                <p className="text-xs text-gray-400">
                                   {address.city}
                                 </p>
                               </div>
@@ -378,89 +336,195 @@ export default function ProfilePage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleOpenModal(address)}
-                                className="p-2 hover:bg-gray-100 rounded-lg"
+                                className="p-2 rounded-lg hover:bg-gray-100 transition"
                               >
-                                <FiEdit3 />
+                                <FiEdit3 size={16} />
                               </button>
+
                               <button
-                                onClick={() =>
-                                  setShowDeleteConfirm(address._id)
-                                }
-                                className="p-2 hover:bg-red-50 rounded-lg text-red-500"
+                                onClick={() => handleDeleteAddress(address._id)}
+                                className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition"
                               >
-                                <FiTrash2 />
+                                <FiTrash2 size={16} />
                               </button>
                             </div>
-                          </div>
-
-                          <p className="text-sm text-gray-600 mb-2">
-                            {address.details}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {address.phone}
-                          </p>
-                        </motion.div>
-                      ))}
+                          </motion.div>
+                        ))
+                      )}
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Security Tab */}
+              {/* SETTINGS */}
+
               {activeTab === "settings" && (
-                <div className="max-w-xl">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center">
-                      <FiUser className="text-emerald-600 text-xl" />
+                <div className="space-y-6">
+                  {/* Profile */}
+
+                  <div className="bg-white border border-gray-200 rounded-xl p-7">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                        <FiUser className="text-green-600" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          Profile Information
+                        </h3>
+
+                        <p className="text-sm text-gray-500">
+                          Update your personal details
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold">{authUser?.name}</h3>
-                      <p className="text-sm text-gray-500">{authUser?.email}</p>
+
+                    <div className="space-y-5">
+                      <Input
+                        label="Full Name"
+                        placeholder="Enter your full name"
+                        className="focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        value={profileForm.name}
+                        onChange={(e) =>
+                          setProfileForm({
+                            ...profileForm,
+                            name: e.target.value,
+                          })
+                        }
+                      />
+
+                      <Input
+                        label="Email Address"
+                        placeholder="example@email.com"
+                        className="focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        value={profileForm.email}
+                        onChange={(e) =>
+                          setProfileForm({
+                            ...profileForm,
+                            email: e.target.value,
+                          })
+                        }
+                      />
+
+                      <Input
+                        label="Phone Number"
+                        placeholder="01xxxxxxxxx"
+                        className="focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        value={profileForm.phone}
+                        onChange={(e) =>
+                          setProfileForm({
+                            ...profileForm,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
+
+                      <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2">
+                        <FiSave />
+                        Save Changes
+                      </Button>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
-                    <h3 className="text-xl font-semibold mb-6">
-                      Change Password
-                    </h3>
-                    <form onSubmit={handlePasswordChange} className="space-y-4">
-                      <Input
-                        type="password"
-                        placeholder="Current Password"
-                        value={passwordForm.currentPassword}
-                        onChange={(e) =>
-                          setPasswordForm({
-                            ...passwordForm,
-                            currentPassword: e.target.value,
-                          })
-                        }
-                        className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                      />
-                      <Input
-                        type="password"
-                        placeholder="New Password"
-                        value={passwordForm.newPassword}
-                        onChange={(e) =>
-                          setPasswordForm({
-                            ...passwordForm,
-                            newPassword: e.target.value,
-                          })
-                        }
-                        className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                      />
-                      <Input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={passwordForm.confirmPassword}
-                        onChange={(e) =>
-                          setPasswordForm({
-                            ...passwordForm,
-                            confirmPassword: e.target.value,
-                          })
-                        }
-                        className="border-gray-200 focus:border-emerald-400 rounded-xl"
-                      />
-                      <Button className="w-full mt-4">Update Password</Button>
+                  {/* Change Password */}
+
+                  <div className="bg-white border border-gray-200 rounded-xl p-7">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                        <FiLock className="text-orange-500" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          Change Password
+                        </h3>
+
+                        <p className="text-sm text-gray-500">
+                          Update your account password
+                        </p>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handlePasswordChange} className="space-y-5">
+                      {["current", "new", "confirm"].map((type, i) => {
+                        const label = [
+                          "Current Password",
+                          "New Password",
+                          "Confirm Password",
+                        ][i];
+
+                        const field = [
+                          "currentPassword",
+                          "newPassword",
+                          "confirmPassword",
+                        ][i];
+
+                        const placeholder = [
+                          "Enter your current password",
+                          "Enter your new password",
+                          "Confirm your new password",
+                        ][i];
+
+                        return (
+                          <div key={type}>
+                            <label className="block text-sm font-medium mb-1">
+                              {label}
+                            </label>
+
+                            <div className="relative">
+                              <input
+                                type={
+                                  showPassword[
+                                    type as keyof typeof showPassword
+                                  ]
+                                    ? "text"
+                                    : "password"
+                                }
+                                placeholder={placeholder}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all"
+                                value={
+                                  passwordForm[
+                                    field as keyof typeof passwordForm
+                                  ]
+                                }
+                                onChange={(e) =>
+                                  setPasswordForm({
+                                    ...passwordForm,
+                                    [field]: e.target.value,
+                                  })
+                                }
+                              />
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setShowPassword({
+                                    ...showPassword,
+                                    [type]:
+                                      !showPassword[
+                                        type as keyof typeof showPassword
+                                      ],
+                                  })
+                                }
+                                className="absolute right-3 top-2.5 text-gray-500"
+                              >
+                                {showPassword[
+                                  type as keyof typeof showPassword
+                                ] ? (
+                                  <FiEyeOff />
+                                ) : (
+                                  <FiEye />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <Button className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2">
+                        <FiLock />
+                        Change Password
+                      </Button>
                     </form>
                   </div>
                 </div>
@@ -470,42 +534,52 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* Address Modal */}
+      {/* ADDRESS MODAL */}
+
       <Modal
         isOpen={showModal}
         onClose={handleCloseModal}
-        title={editingAddress ? "Edit Address" : "New Address"}
+        title={editingAddress ? "Edit Address" : "Add New Address"}
       >
-        <form onSubmit={handleSubmitAddress} className="space-y-4">
+        <form onSubmit={handleSubmitAddress} className="space-y-5 pt-2">
           <Input
             label="Address Name"
+            placeholder="Home, Office..."
             value={addressForm.name}
             onChange={(e) =>
               setAddressForm({ ...addressForm, name: e.target.value })
             }
           />
+
           <Input
-            label="Street Address"
+            label="Full Address"
+            placeholder="Street, building..."
             value={addressForm.details}
             onChange={(e) =>
               setAddressForm({ ...addressForm, details: e.target.value })
             }
           />
-          <Input
-            label="Phone"
-            value={addressForm.phone}
-            onChange={(e) =>
-              setAddressForm({ ...addressForm, phone: e.target.value })
-            }
-          />
-          <Input
-            label="City"
-            value={addressForm.city}
-            onChange={(e) =>
-              setAddressForm({ ...addressForm, city: e.target.value })
-            }
-          />
-          <div className="flex gap-3 pt-4">
+
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Phone"
+              placeholder="01xxxxxxxxx"
+              value={addressForm.phone}
+              onChange={(e) =>
+                setAddressForm({ ...addressForm, phone: e.target.value })
+              }
+            />
+
+            <Input
+              label="City"
+              value={addressForm.city}
+              onChange={(e) =>
+                setAddressForm({ ...addressForm, city: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="flex gap-3 pt-3">
             <Button
               variant="outline"
               type="button"
@@ -514,39 +588,15 @@ export default function ProfilePage() {
             >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
-              {editingAddress ? "Update" : "Save"}
+
+            <Button
+              type="submit"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            >
+              {editingAddress ? "Update Address" : "Add Address"}
             </Button>
           </div>
         </form>
-      </Modal>
-
-      {/* Delete Modal */}
-      <Modal
-        isOpen={!!showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(null)}
-        title="Delete Address?"
-      >
-        <div className="space-y-6 text-center">
-          <p className="text-gray-600">This action cannot be undone.</p>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteConfirm(null)}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              className="flex-1 bg-red-500 hover:bg-red-600"
-              onClick={() =>
-                showDeleteConfirm && handleDeleteAddress(showDeleteConfirm)
-              }
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
       </Modal>
     </>
   );
