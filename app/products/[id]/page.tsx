@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ProductDetailHero } from "./ProductDetailHero";
 import { ProductMainSection } from "./components/ProductMainSection";
 import { ProductTabs } from "./components/ProductTabs";
 import { useParams } from "next/navigation";
 import { useProduct } from "@/features/products/hooks/useProducts";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import type { Product } from "@/features/products/types/product.types";
-import type { User } from "@/features/auth/types/auth.types";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -37,14 +34,40 @@ export default function ProductDetailPage() {
     );
   }
 
+  // هنا الـ breadcrumb مباشرة
+  const category = product.category;
+  const subcategory = product.subcategory?.[0];
+
   return (
-    <div className=" mx-auto px-4 py-8 space-y-8">
-      <ProductDetailHero product={product} />
+    <div className="mx-auto px-4 py-8 space-y-8">
+      <nav className="text-sm mb-4">
+        <ul className="flex flex-wrap gap-2 text-gray-600">
+          <li>
+            <a href="/">Home</a>
+            <span className="mx-1">/</span>
+          </li>
+          {category && (
+            <li>
+              <a href={`/category/${category.slug}`}>{category.name}</a>
+              <span className="mx-1">/</span>
+            </li>
+          )}
+          {subcategory && (
+            <li>
+              <a href={`/category/${subcategory.slug}`}>{subcategory.name}</a>
+              <span className="mx-1">/</span>
+            </li>
+          )}
+          <li className="font-semibold">{product.title}</li>
+        </ul>
+      </nav>
+
       <ProductMainSection
         product={product}
         quantity={quantity}
         onQuantityChange={setQuantity}
       />
+
       <ProductTabs
         product={product}
         activeTab={activeTab}
