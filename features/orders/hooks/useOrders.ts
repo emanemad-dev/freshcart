@@ -5,33 +5,39 @@ import { useAuthStore } from '@/features/auth/store/auth.store';
 import { OrderListParams, Order } from '../types/orders.types';
 
 export const useOrders = (params?: OrderListParams) => {
+  const { user, token } = useAuthStore.getState();
+  
+  // التحقق من وجود userId
+  let userId = user?._id;
+  if (!userId && token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      userId = payload.id;
+    } catch (e) {
+      console.error('Token decode error:', e);
+    }
+  }
+
   return useQuery({
-    queryKey: ['orders'],
+    queryKey: ['orders', userId], // إضافة userId للـ queryKey
     queryFn: async () => {
-      const { user, token } = useAuthStore.getState();
-      console.log('Auth state:', { user, hasToken: !!token }); // DEBUG
-      
-      let userId = user?._id;
-      if (!userId && token) {
-        // Extract ID from JWT token if _id missing
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          userId = payload.id;
-          console.log('Extracted user ID from token:', userId);
-        } catch (e) {
-          console.error('Token decode error:', e);
-        }
-      }
-      
+      // لو مفيش userId، ارجع مصفوفة فاضية
       if (!userId) {
-        console.error('No user ID found');
-        throw new Error('No user ID available');
+        console.log('No user ID found, returning empty orders');
+        return { orders: [] };
       }
       
-      return ordersService.getUserOrders(userId);
+      try {
+        const data = await ordersService.getUserOrders(userId);
+        return data;
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        return { orders: [] }; // في حالة الخطأ ارجع مصفوفة فاضية
+      }
     },
+    enabled: true, // دايماً enabled عشان نقدر نرجع مصفوفة فاضية
     select: (data) => {
-      console.log('Orders API response:', data); // DEBUG
+      console.log('Orders API response:', data);
       // Handle both {orders: [], total: N} or flat [Order1, Order2]
       const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
       return {
@@ -42,6 +48,7 @@ export const useOrders = (params?: OrderListParams) => {
   });
 };
 
+// باقي الـ hooks زي ماهي
 export const useOrder = (id: string) => {
   return useQuery({
     queryKey: ['order', id],
@@ -80,4 +87,3 @@ export const useCancelOrder = () => {
     },
   });
 };
-
