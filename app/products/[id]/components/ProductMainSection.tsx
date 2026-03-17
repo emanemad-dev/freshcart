@@ -18,12 +18,18 @@ interface ProductMainSectionProps {
   product: Product;
   quantity: number;
   onQuantityChange: (qty: number) => void;
+  onAddToCart: () => void;
+  onAddToWishlist: () => void;
+  isInWishlist: boolean;
 }
 
 export const ProductMainSection: FC<ProductMainSectionProps> = ({
   product,
   quantity,
   onQuantityChange,
+  onAddToCart,
+  onAddToWishlist,
+  isInWishlist,
 }) => {
   const images = product.images?.length ? product.images : [product.imageCover];
   const [mainImage, setMainImage] = useState(images[0]);
@@ -35,7 +41,7 @@ export const ProductMainSection: FC<ProductMainSectionProps> = ({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
       {/* Images */}
       <div>
-        <div className="relative h-[420px] lg:h-[520px] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50 mb-4 border">
+        <div className="relative h-[420px] lg:h-[520px] rounded-2xl overflow-hidden bg-[#F9FAFB] border border-gray-100 shadow-sm hover:shadow-md transition-shadow mb-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={mainImage}
@@ -60,11 +66,11 @@ export const ProductMainSection: FC<ProductMainSectionProps> = ({
             <div
               key={idx}
               onClick={() => setMainImage(img)}
-              className={`relative w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition
+              className={`relative w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200
           ${
             mainImage === img
-              ? "border-emerald-500 shadow-sm"
-              : "border-gray-200"
+              ? "border-emerald-500 shadow-md hover:shadow-lg"
+              : "border-gray-200 hover:shadow-sm hover:border-gray-300"
           }`}
             >
               <Image
@@ -72,7 +78,7 @@ export const ProductMainSection: FC<ProductMainSectionProps> = ({
                 alt=""
                 fill
                 style={{ objectFit: "contain" }}
-                className="bg-gray-50"
+                className="bg-[#F9FAFB]"
               />
             </div>
           ))}
@@ -80,13 +86,13 @@ export const ProductMainSection: FC<ProductMainSectionProps> = ({
       </div>
 
       {/* Product Details */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Tags */}
         <div className="flex gap-2 text-xs">
-          <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">
+          <span className="bg-emerald-100/80 text-emerald-700 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm">
             {product.category?.name}
           </span>
-          <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+          <span className="bg-gray-100/80 text-gray-700 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm">
             {product.brand?.name}
           </span>
         </div>
@@ -153,36 +159,46 @@ export const ProductMainSection: FC<ProductMainSectionProps> = ({
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm">
+          <Button
+            onClick={onAddToCart}
+            className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+          >
             <FaShoppingCart />
             Add to Cart
           </Button>
 
-          <Button className="flex-1 bg-gray-900 hover:bg-black text-white py-3 rounded-xl">
+          <Button className="flex-1 bg-gray-900 hover:bg-black text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
             Buy Now
           </Button>
         </div>
 
         {/* Wishlist */}
-        <Button className="w-full border border-gray-200 hover:bg-gray-50 text-gray-700 py-2 rounded-xl flex items-center justify-center gap-2">
-          <FaHeart />
-          Add to Wishlist
+        <Button
+          onClick={onAddToWishlist}
+          className="w-full border border-gray-200 hover:bg-gray-50 text-gray-700 py-2 rounded-xl flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all duration-200"
+        >
+          <FaHeart
+            className={
+              isInWishlist ? "fill-red-500 text-red-500" : "text-gray-400"
+            }
+          />
+          {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
         </Button>
 
         {/* Features */}
-        <div className="grid grid-cols-3 gap-4 mt-6 bg-gray-50 p-4 rounded-xl text-sm text-gray-700">
-          <div className="flex items-center gap-2">
-            <FaTruck className="text-emerald-500" />
+        <div className="grid grid-cols-3 gap-4 mt-8 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200 text-sm text-gray-700">
+          <div className="flex items-center gap-3">
+            <FaTruck className="text-emerald-500 w-5 h-5 flex-shrink-0" />
             Free Delivery
           </div>
 
-          <div className="flex items-center gap-2">
-            <FaUndo className="text-emerald-500" />
+          <div className="flex items-center gap-3">
+            <FaUndo className="text-emerald-500 w-5 h-5 flex-shrink-0" />
             30 Days Return
           </div>
 
-          <div className="flex items-center gap-2">
-            <FaShieldAlt className="text-emerald-500" />
+          <div className="flex items-center gap-3">
+            <FaShieldAlt className="text-emerald-500 w-5 h-5 flex-shrink-0" />
             Secure Payment
           </div>
         </div>

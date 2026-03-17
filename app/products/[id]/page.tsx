@@ -6,6 +6,9 @@ import { ProductTabs } from "./components/ProductTabs";
 import { useParams } from "next/navigation";
 import { useProduct } from "@/features/products/hooks/useProducts";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useCart } from "@/features/cart/hooks/useCart";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import type { Product } from "@/features/products/types/product.types";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -17,6 +20,27 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<
     "details" | "reviews" | "shipping"
   >("details");
+
+  const { add: addToCart } = useCart();
+  const {
+    add: addToWishlist,
+    toggle: toggleWishlist,
+    isInWishlist,
+  } = useWishlist();
+
+  const handleAddToCart = () => {
+    if (product) addToCart(product, quantity);
+  };
+
+  const handleAddToWishlist = () => {
+    if (product) {
+      toggleWishlist(product);
+    }
+  };
+
+  const isProductInWishlist = product
+    ? isInWishlist(product._id || product.id || "")
+    : false;
 
   if (isLoading) {
     return (
@@ -66,6 +90,9 @@ export default function ProductDetailPage() {
         product={product}
         quantity={quantity}
         onQuantityChange={setQuantity}
+        onAddToCart={handleAddToCart}
+        onAddToWishlist={handleAddToWishlist}
+        isInWishlist={isProductInWishlist}
       />
 
       <ProductTabs
