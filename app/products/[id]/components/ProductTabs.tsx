@@ -16,10 +16,7 @@ import {
   useDeleteReview,
 } from "@/features/reviews/hooks/useReviews";
 import type { Product } from "@/features/products/types/product.types";
-import type {
-  Review,
-  CreateReviewData,
-} from "@/features/reviews/types/reviews.types";
+import type { Review } from "@/features/reviews/types/reviews.types";
 import type { User } from "@/features/auth/types/auth.types";
 
 interface ProductTabsProps {
@@ -92,13 +89,13 @@ export const ProductTabs: FC<ProductTabsProps> = ({
   };
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex space-x-1 border-b">
         <button
           onClick={() => onTabChange("details")}
           className={`px-6 py-3 font-medium text-sm transition-colors relative ${
             activeTab === "details"
-              ? "text-emerald-600 border-b-2 border-emerald-600"
+              ? "text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50 rounded-t-lg"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -108,7 +105,7 @@ export const ProductTabs: FC<ProductTabsProps> = ({
           onClick={() => onTabChange("reviews")}
           className={`px-6 py-3 font-medium text-sm transition-colors relative ${
             activeTab === "reviews"
-              ? "text-emerald-600 border-b-2 border-emerald-600"
+              ? "text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50 rounded-t-lg"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -118,7 +115,7 @@ export const ProductTabs: FC<ProductTabsProps> = ({
           onClick={() => onTabChange("shipping")}
           className={`px-6 py-3 font-medium text-sm transition-colors relative ${
             activeTab === "shipping"
-              ? "text-emerald-600 border-b-2 border-emerald-600"
+              ? "text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50 rounded-t-lg"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -415,10 +412,10 @@ export const ProductTabs: FC<ProductTabsProps> = ({
             {/* Shipping + Returns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Shipping */}
-              <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+              <div className="bg-emerald-50 border border-emerald-50 p-6 rounded-2xl shadow-sm hover:shadow-md transition">
                 <h3 className="flex items-center text-lg font-semibold text-gray-900 mb-5">
-                  <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-emerald-100 mr-3">
-                    <FaShippingFast className="text-emerald-600 w-4 h-4" />
+                  <span className="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-600 mr-3">
+                    <FaShippingFast className=" text-white w-4 h-4" />
                   </span>
                   Shipping Information
                 </h3>
@@ -434,7 +431,7 @@ export const ProductTabs: FC<ProductTabsProps> = ({
                       key={i}
                       className="flex items-start text-sm text-gray-600 gap-2"
                     >
-                      <FaCheckCircle className="text-emerald-500 mt-0.5 w-4 h-4" />
+                      <FaCheckCircle className="text-emerald-600 mt-0.5 w-4 h-4" />
                       {item}
                     </li>
                   ))}
@@ -442,10 +439,10 @@ export const ProductTabs: FC<ProductTabsProps> = ({
               </div>
 
               {/* Returns */}
-              <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+              <div className="bg-emerald-50 border border-emerald-50 p-6 rounded-2xl shadow-sm hover:shadow-md transition">
                 <h3 className="flex items-center text-lg font-semibold text-gray-900 mb-5">
-                  <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-emerald-100 mr-3">
-                    <FaUndo className="text-emerald-600 w-4 h-4" />
+                  <span className="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-600 mr-3">
+                    <FaUndo className="text-white w-4 h-4" />
                   </span>
                   Returns & Refunds
                 </h3>
@@ -461,7 +458,7 @@ export const ProductTabs: FC<ProductTabsProps> = ({
                       key={i}
                       className="flex items-start text-sm text-gray-600 gap-2"
                     >
-                      <FaCheckCircle className="text-emerald-500 mt-0.5 w-4 h-4" />
+                      <FaCheckCircle className="text-emerald-600 mt-0.5 w-4 h-4" />
                       {item}
                     </li>
                   ))}
@@ -470,9 +467,9 @@ export const ProductTabs: FC<ProductTabsProps> = ({
             </div>
 
             {/* Buyer Protection */}
-            <div className="bg-gradient-to-r from-emerald-50 to-white border border-emerald-100 p-6 rounded-2xl flex gap-4 items-start">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-100">
-                <FaShieldAlt className="text-emerald-600 w-5 h-5" />
+            <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-6 rounded-2xl flex gap-4 items-start">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300">
+                <FaShieldAlt className="text-gray-600 w-5 h-5" />
               </div>
 
               <div>

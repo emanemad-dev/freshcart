@@ -121,3 +121,11 @@ body {
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
   border-color: rgba(16, 185, 129, 0.3);
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; 
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+}

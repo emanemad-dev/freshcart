@@ -63,6 +63,7 @@ export default function ProductDetailPage() {
   const subcategory = product.subcategory?.[0];
 
   return (
+    
     <div className="mx-auto px-4 py-8 space-y-8">
       <nav className="text-sm mb-4">
         <ul className="flex flex-wrap gap-2 text-gray-600">
