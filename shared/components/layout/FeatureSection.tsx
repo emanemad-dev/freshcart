@@ -38,11 +38,13 @@ export function FeatureSection() {
   ];
 
   return (
-    <section className="py-8 sm:py-10 md:py-12 w-full bg-gradient-to-br from-emerald-50/50 via-white to-emerald-50/30">
-      <div className="mx-auto px-3 sm:px-4 lg:px-6">
+    <section className="py-12 lg:py-16 mx-auto px-4 sm:px-6 lg:px-8 w-full bg-gradient-to-br from-emerald-50/50 via-white to-emerald-50/30">
+      <div className="w-full">
         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
           {features.map((feature, idx) => {
             const Icon = feature.icon;
+            const iconClass = `w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full ${feature.bgColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0`;
+            const textClass = `text-base sm:text-xl ${feature.iconColor}`;
 
             return (
               <div
@@ -50,12 +52,8 @@ export function FeatureSection() {
                 className="bg-white/90 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-gray-100/60 hover:border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 sm:gap-3 group hover:bg-white"
               >
                 {/* icon */}
-                <div
-                  className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full ${feature.bgColor} group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}
-                >
-                  <Icon
-                    className={`text-base sm:text-xl ${feature.iconColor}`}
-                  />
+                <div className={iconClass}>
+                  <Icon className={textClass} />
                 </div>
 
                 {/* text */}

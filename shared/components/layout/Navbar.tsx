@@ -8,6 +8,8 @@ import { useProducts } from "@/features/products/hooks/useProducts";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaSearch,
   FaShoppingCart,
@@ -35,12 +37,22 @@ export const Navbar = () => {
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
 
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false); // Close mobile search
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,7 +164,10 @@ export const Navbar = () => {
             </div>
 
             {/* Desktop Search - Hidden on mobile */}
-            <div className="hidden lg:flex flex-1 mx-8 max-w-2xl relative">
+            <form
+              onSubmit={handleSearch}
+              className="hidden lg:flex flex-1 mx-8 max-w-2xl relative"
+            >
               <input
                 type="text"
                 placeholder="Search products..."
@@ -160,8 +175,13 @@ export const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-5 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-base bg-white/80 backdrop-blur-sm"
               />
-              <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-500 p-1 rounded transition-colors"
+              >
+                <FaSearch className="w-5 h-5" />
+              </button>
+            </form>
 
             {/* Desktop Nav - Hidden on mobile */}
             <div className="hidden lg:flex items-center gap-6">
@@ -274,59 +294,134 @@ export const Navbar = () => {
                   </button>
 
                   {profileModalOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-72 bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl shadow-2xl py-2 z-50">
-                      <div className="px-5 pb-3 border-b">
-                        <div className="flex items-center gap-3 py-3">
-                          <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                            <FaUser className="text-emerald-600" />
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute right-0 top-full mt-3 w-80 bg-white/90 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl py-3 z-50 overflow-hidden"
+                      style={{
+                        boxShadow:
+                          "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(16, 185, 129, 0.1) inset",
+                      }}
+                    >
+                      {/* Decorative Elements */}
+                      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-emerald-50 via-teal-50 to-transparent -z-0" />
+                      <div className="absolute top-10 right-0 w-32 h-32 bg-emerald-200/20 rounded-full blur-3xl -z-0" />
+
+                      {/* User Info Section */}
+                      <div className="relative px-6 pb-4 border-b border-emerald-100/50">
+                        <div className="flex items-center gap-4 py-4">
+                          <div className="relative">
+                            <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-200/50">
+                              <span className="text-white text-xl font-bold">
+                                {user?.name?.charAt(0) || "U"}
+                              </span>
+                            </div>
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full" />
                           </div>
-                          <div>
-                            <h3 className="font-bold text-base text-gray-800">
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-800 text-lg leading-tight">
                               {user?.name}
                             </h3>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                              <span className="w-1 h-1 bg-emerald-400 rounded-full" />
                               {user?.email}
                             </p>
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-0.5">
+
+                      {/* Menu Items */}
+                      <div className="relative px-3 py-2 space-y-1">
                         <Link
                           href="/profile"
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 transition-colors text-sm"
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-all duration-300 group"
                           onClick={() => setProfileModalOpen(false)}
                         >
-                          <FaUser className="w-4 text-emerald-600" />
-                          Profile
+                          <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                            <FaUser className="w-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-gray-700">
+                              Profile
+                            </span>
+                            <p className="text-xs text-gray-400">
+                              View and edit your profile
+                            </p>
+                          </div>
                         </Link>
+
                         <Link
                           href="/orders"
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 transition-colors text-sm"
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-all duration-300 group"
                           onClick={() => setProfileModalOpen(false)}
                         >
-                          <FaShoppingBag className="w-4 text-emerald-600" />
-                          Orders
+                          <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                            <FaShoppingBag className="w-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-gray-700">
+                              Orders
+                            </span>
+                            <p className="text-xs text-gray-400">
+                              Track and manage orders
+                            </p>
+                          </div>
                         </Link>
+
                         <Link
                           href="/wishlist"
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 transition-colors text-sm"
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-all duration-300 group"
                           onClick={() => setProfileModalOpen(false)}
                         >
-                          <FaHeart className="w-4 text-emerald-600" />
-                          Wishlist
+                          <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                            <FaHeart className="w-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-gray-700">
+                              Wishlist
+                            </span>
+                            <p className="text-xs text-gray-400">
+                              Your saved items
+                            </p>
+                          </div>
                         </Link>
+                      </div>
+
+                      {/* Logout Section */}
+                      <div className="relative px-3 pt-2 mt-2 border-t border-emerald-100/50">
                         <button
                           onClick={() => {
                             setProfileModalOpen(false);
                             logout();
                           }}
-                          className="flex items-center gap-3 w-full px-5 py-3 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium border-t mt-2"
+                          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 transition-all duration-300 group"
                         >
-                          <FaSignOutAlt className="w-4" />
-                          Log Out
+                          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                            <FaSignOutAlt className="w-4 text-red-500 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <div className="flex-1 text-left">
+                            <span className="text-sm font-medium text-red-600">
+                              Log Out
+                            </span>
+                            <p className="text-xs text-gray-400">
+                              Sign out from your account
+                            </p>
+                          </div>
                         </button>
                       </div>
-                    </div>
+
+                      {/* Footer Note */}
+                      <div className="px-6 py-3 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 mt-2">
+                        <p className="text-xs text-center text-gray-500">
+                          Signed in as{" "}
+                          <span className="text-emerald-600 font-medium">
+                            {user?.email}
+                          </span>
+                        </p>
+                      </div>
+                    </motion.div>
                   )}
                 </div>
               ) : (
@@ -344,7 +439,7 @@ export const Navbar = () => {
           {/* Mobile Search Bar - Shows when search is toggled */}
           {searchOpen && (
             <div className="lg:hidden py-3 border-t border-gray-100">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
                   placeholder="Search products..."
@@ -353,8 +448,13 @@ export const Navbar = () => {
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-base"
                   autoFocus
                 />
-                <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
+                <button
+                  type="submit"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-500 p-1 rounded transition-colors"
+                >
+                  <FaSearch className="w-5 h-5" />
+                </button>
+              </form>
             </div>
           )}
 

@@ -48,7 +48,7 @@ export function HeroSlider() {
   const current = slides[currentSlide];
 
   return (
-    <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-amber-700">
+    <section className="relative w-full min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] overflow-hidden bg-amber-700">
       {/* Slides */}
       <div className="absolute inset-0">
         <motion.div
@@ -69,66 +69,66 @@ export function HeroSlider() {
 
           {/* Light Green Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-green-400/5 to-emerald-500/10" />
+        </motion.div>
+      </div>
 
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 container mx-auto h-full">
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-4xl"
-            >
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight drop-shadow-2xl">
-                {current.title}
-              </h1>
-              <p className="text-xl md:text-2xl mb-12 opacity-95 drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
-                {current.subtitle}
-              </p>
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center"
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="max-w-4xl w-full"
+        >
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 leading-tight drop-shadow-2xl">
+            {current.title}
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 lg:mb-12 opacity-95 drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
+            {current.subtitle}
+          </p>
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link href="/products">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 sm:px-10 py-4 sm:py-5 bg-white/95 backdrop-blur-sm text-emerald-700 font-black text-lg sm:text-xl rounded-3xl shadow-2xl border border-white/50 hover:bg-white hover:shadow-3xl transition-all duration-300 min-w-[200px]"
               >
-                <Link href="/products">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-10 py-5 bg-white/95 backdrop-blur-sm text-emerald-700 font-bold text-xl rounded-3xl shadow-2xl border border-white/50 hover:bg-white hover:shadow-3xl transition-all duration-300 min-w-[200px]"
-                  >
-                    {current.cta}
-                  </motion.button>
-                </Link>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-10 py-5 bg-white/20 backdrop-blur-sm text-white font-bold text-xl rounded-3xl shadow-xl border border-white/40 hover:bg-white/30 hover:shadow-2xl transition-all duration-300 min-w-[200px]"
-                >
-                  Learn More
-                </motion.button>
-              </motion.div>
-            </motion.div>
-          </div>
+                {current.cta}
+              </motion.button>
+            </Link>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 sm:px-10 py-4 sm:py-5 bg-white/20 backdrop-blur-sm text-white font-black text-lg sm:text-xl rounded-3xl shadow-xl border border-white/40 hover:bg-white/30 hover:shadow-2xl transition-all duration-300 min-w-[200px]"
+            >
+              Learn More
+            </motion.button>
+          </motion.div>
         </motion.div>
       </div>
 
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group"
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group z-20"
       >
         <FaChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
       </button>
 
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group"
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group z-20"
       >
         <FaChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -139,15 +139,13 @@ export function HeroSlider() {
                 : "bg-white/50 hover:bg-white/70 hover:scale-110"
             }`}
           >
-            <FaCircle
-              className={`w-3 h-3 text-white opacity-0 pointer-events-none`}
-            />
+            <FaCircle className="w-3 h-3 text-white opacity-0 pointer-events-none" />
           </button>
         ))}
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/30 rounded-full overflow-hidden">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/30 rounded-full overflow-hidden z-20">
         <motion.div
           className="h-full bg-white rounded-full"
           initial={{ width: 0 }}
