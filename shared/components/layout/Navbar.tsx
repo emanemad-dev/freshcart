@@ -8,6 +8,7 @@ import { useProducts } from "@/features/products/hooks/useProducts";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   FaSearch,
   FaShoppingCart,
@@ -35,12 +36,22 @@ export const Navbar = () => {
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
 
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false); // Close mobile search
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,7 +163,10 @@ export const Navbar = () => {
             </div>
 
             {/* Desktop Search - Hidden on mobile */}
-            <div className="hidden lg:flex flex-1 mx-8 max-w-2xl relative">
+            <form
+              onSubmit={handleSearch}
+              className="hidden lg:flex flex-1 mx-8 max-w-2xl relative"
+            >
               <input
                 type="text"
                 placeholder="Search products..."
@@ -160,8 +174,13 @@ export const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-5 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-base bg-white/80 backdrop-blur-sm"
               />
-              <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-500 p-1 rounded transition-colors"
+              >
+                <FaSearch className="w-5 h-5" />
+              </button>
+            </form>
 
             {/* Desktop Nav - Hidden on mobile */}
             <div className="hidden lg:flex items-center gap-6">
@@ -344,7 +363,7 @@ export const Navbar = () => {
           {/* Mobile Search Bar - Shows when search is toggled */}
           {searchOpen && (
             <div className="lg:hidden py-3 border-t border-gray-100">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
                   placeholder="Search products..."
@@ -353,8 +372,13 @@ export const Navbar = () => {
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-base"
                   autoFocus
                 />
-                <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
+                <button
+                  type="submit"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-500 p-1 rounded transition-colors"
+                >
+                  <FaSearch className="w-5 h-5" />
+                </button>
+              </form>
             </div>
           )}
 
