@@ -15,12 +15,19 @@ interface ShippingFormProps {
   errors: Record<string, string>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setFormData: (
-    data: Partial<{
-      city: string;
-      street: string;
-      phone: string;
-      paymentMethod?: "cash" | "card";
-    }>,
+    data:
+      | Partial<{
+          city: string;
+          street: string;
+          phone: string;
+          paymentMethod?: "cash" | "card";
+        }>
+      | ((prev: {
+          city: string;
+          street: string;
+          phone: string;
+          paymentMethod?: "cash" | "card";
+        }) => any),
   ) => void;
   setSelectedAddress?: (address: Address | null) => void;
   showChangeButton?: boolean;
@@ -35,6 +42,7 @@ export function ShippingForm({
   showChangeButton = true,
 }: ShippingFormProps) {
   const { data: addresses, isLoading } = useAddresses();
+
   const [selectedAddress, setSelectedAddressInternal] =
     useState<Address | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -47,38 +55,41 @@ export function ShippingForm({
   useEffect(() => {
     if (!isLoading && addresses?.data?.length > 0 && !selectedAddress) {
       const firstAddress = addresses.data[0];
+
       setSelectedAddressInternal(firstAddress);
-      setFormData({
+
+      setFormData((prev) => ({
+        ...prev,
         city: firstAddress.city,
         street: firstAddress.details,
         phone: firstAddress.phone,
-        paymentMethod: formData.paymentMethod,
-      });
+      }));
     }
-  }, [
-    addresses,
-    isLoading,
-    selectedAddress,
-    formData.paymentMethod,
-    setFormData,
-  ]);
+  }, [addresses, isLoading, selectedAddress, setFormData]);
 
   const handleAddressSelect = (address: Address) => {
     setSelectedAddressInternal(address);
     setShowForm(false);
-    setFormData({
+
+    setFormData((prev) => ({
+      ...prev,
       city: address.city,
       street: address.details,
       phone: address.phone,
-      paymentMethod: formData.paymentMethod,
-    });
+    }));
   };
 
   const handleChangeAddress = () => {
     setPrevAddress(selectedAddress);
     setSelectedAddressInternal(null);
     setShowForm(true);
-    setFormData({ city: "", street: "", phone: "" });
+
+    setFormData((prev) => ({
+      ...prev,
+      city: "",
+      street: "",
+      phone: "",
+    }));
   };
 
   const handleCancelChange = () => {
@@ -163,8 +174,9 @@ export function ShippingForm({
                 </label>
                 <input
                   name="city"
-                  placeholder="e.g. Cairo, Alexandria, Giza"
+                  value={formData.city}
                   onChange={onChange}
+                  placeholder="e.g. Cairo, Alexandria, Giza"
                   className={`w-full px-5 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm ${
                     errors.city ? "border-red-500" : "border-gray-300"
                   }`}
@@ -180,8 +192,9 @@ export function ShippingForm({
                 </label>
                 <input
                   name="street"
-                  placeholder="Street name, building number, floor, apartment..."
+                  value={formData.street}
                   onChange={onChange}
+                  placeholder="Street name, building number, floor, apartment..."
                   className={`w-full px-5 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm ${
                     errors.street ? "border-red-500" : "border-gray-300"
                   }`}
@@ -197,8 +210,9 @@ export function ShippingForm({
                 </label>
                 <input
                   name="phone"
-                  placeholder="01xxxxxxxxx"
+                  value={formData.phone}
                   onChange={onChange}
+                  placeholder="01xxxxxxxxx"
                   className={`w-full px-5 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm ${
                     errors.phone ? "border-red-500" : "border-gray-300"
                   }`}
