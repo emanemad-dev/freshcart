@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductMainSection } from "./components/ProductMainSection";
 import { ProductTabs } from "./components/ProductTabs";
 import { useParams } from "next/navigation";
-import { useProduct } from "@/features/products/hooks/useProducts";
+import { useProduct, useProducts } from "@/features/products/hooks/useProducts";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useCart } from "@/features/cart/hooks/useCart";
+import { FaGem } from "react-icons/fa";
+import { ProductCard } from "@/features/products/components/ProductCard";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import type { Product } from "@/features/products/types/product.types";
-import { ChevronRight, Home, Package, ShoppingBag } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Package,
+  ShoppingBag,
+} from "lucide-react";
 import Link from "next/link";
 
-// Make sure this is a proper React component with a default export
 export default function ProductDetailPage() {
   const params = useParams();
   const id = params.id as string;
@@ -23,6 +30,10 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<
     "details" | "reviews" | "shipping"
   >("details");
+
+  // State for carousel
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
 
   const { add: addToCart } = useCart();
   const {
@@ -44,6 +55,52 @@ export default function ProductDetailPage() {
   const isProductInWishlist = product
     ? isInWishlist(product._id || product.id || "")
     : false;
+
+  const relatedProductsParams = product?.category?._id
+    ? {
+        categoryId: product.category._id,
+        limit: 8,
+        sort: "-sold",
+      }
+    : null;
+  const { data: relatedProducts } = useProducts(relatedProductsParams);
+
+  // Filter related products
+  const allRelatedProducts =
+    relatedProducts?.data?.filter((p: Product) => p._id !== product?._id) || [];
+
+  // Calculate items per page based on screen size
+  // Calculate items per page based on screen size
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth >= 1024)
+        setItemsPerPage(5); // 5 products on large screens
+      else if (window.innerWidth >= 768)
+        setItemsPerPage(3); // 3 products on medium screens
+      else setItemsPerPage(2); // 2 products on small screens
+    };
+
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(allRelatedProducts.length / itemsPerPage);
+  const startIndex = currentPage * itemsPerPage;
+  const currentProducts = allRelatedProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
+
+  // Navigation handlers
+  const goToPrevious = () => {
+    setCurrentPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
 
   // Loading state
   if (isLoading) {
@@ -89,7 +146,7 @@ export default function ProductDetailPage() {
   // Main render
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb Navigation */}
         <nav className="mb-8" aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-2 text-sm">
@@ -157,46 +214,72 @@ export default function ProductDetailPage() {
           />
         </div>
 
-        {/* Trust Badges Section */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: "🚚",
-                title: "Free Shipping",
-                text: "On orders over $50",
-              },
-              {
-                icon: "🔄",
-                title: "30 Days Return",
-                text: "Money back guarantee",
-              },
-              {
-                icon: "🔒",
-                title: "Secure Payment",
-                text: "100% secure checkout",
-              },
-              {
-                icon: "⭐",
-                title: "24/7 Support",
-                text: "Always here to help",
-              },
-            ].map((badge, idx) => (
-              <div
-                key={idx}
-                className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl"
-              >
-                <span className="text-2xl">{badge.icon}</span>
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">
-                    {badge.title}
-                  </p>
-                  <p className="text-xs text-gray-500">{badge.text}</p>
+        {/* You May Also Like Section with Carousel */}
+        {product.category && allRelatedProducts.length > 0 && (
+          <section className="mt-20">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
+                  <FaGem className="w-4 h-4 text-white" />
                 </div>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  You May Also Like
+                </h2>
               </div>
-            ))}
-          </div>
-        </div>
+
+              {/* Navigation Buttons */}
+              {totalPages > 1 && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={goToPrevious}
+                    disabled={currentPage === 0}
+                    className="p-2 rounded-full border border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    aria-label="Previous products"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    disabled={currentPage === totalPages - 1}
+                    className="p-2 rounded-full border border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    aria-label="Next products"
+                  >
+                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {" "}
+              {currentProducts.map((relatedProduct: Product) => (
+                <ProductCard
+                  key={relatedProduct._id}
+                  product={relatedProduct}
+                />
+              ))}
+            </div>
+
+            {/* Page Indicators */}
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-8">
+                {Array.from({ length: totalPages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentPage(idx)}
+                    className={`h-2 rounded-full transition-all ${
+                      currentPage === idx
+                        ? "w-6 bg-gradient-to-r from-emerald-500 to-teal-500"
+                        : "w-2 bg-gray-300 hover:bg-gray-400"
+                    }`}
+                    aria-label={`Go to page ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );
