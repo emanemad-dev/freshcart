@@ -1,5 +1,5 @@
 // Checkout Hook
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { ordersService, ShippingAddress } from '@/features/orders/api/orders.service';
 import { useCartStore } from '@/features/cart/store/cart.store';
@@ -13,6 +13,7 @@ export interface CheckoutFormData {
 }
 
 export const useCheckout = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const clearCart = useCartStore((state) => state.clearCart);
   const token = useAuthStore((state) => state.token);
@@ -22,6 +23,7 @@ export const useCheckout = () => {
     mutationFn: ({ cartId, shippingAddress }: { cartId: string; shippingAddress: ShippingAddress }) =>
       ordersService.createCashOrder(cartId, shippingAddress),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
       // Clear cart after successful order
       clearCart();
       // Navigate to orders page
@@ -37,6 +39,7 @@ export const useCheckout = () => {
     mutationFn: ({ cartId, url, shippingAddress }: { cartId: string; url: string; shippingAddress: ShippingAddress }) =>
       ordersService.createCheckoutSession(cartId, url, shippingAddress),
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
       // Redirect to payment URL
       if (data?.url) {
         window.location.href = data.url;

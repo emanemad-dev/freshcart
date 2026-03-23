@@ -4,13 +4,14 @@ import Image from "next/image";
 import { FaLock, FaShippingFast, FaUndo } from "react-icons/fa";
 
 interface CartItem {
-  product: {
+  product?: {
     imageCover?: string;
     image?: string;
     title?: string;
     name?: string;
     price?: number;
   };
+  price?: number;
   quantity?: number;
   count?: number;
 }
@@ -55,7 +56,7 @@ export function OrderSummary({
             const productName =
               cartItem.product?.title || cartItem.product?.name || "Product";
 
-            const price = cartItem.product?.price || 0;
+            const price = cartItem.product?.price || cartItem.price || 0;
             const quantity = cartItem.quantity || cartItem.count || 1;
 
             return (
