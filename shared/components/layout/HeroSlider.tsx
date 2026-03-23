@@ -1,162 +1,173 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { FaChevronLeft, FaChevronRight, FaCircle } from "react-icons/fa";
+import Link from "next/link";
 
 const slides = [
   {
     id: 1,
-    image: "/hero-1.jpg",
-    title: "Fresh Fashion Collection",
-    subtitle: "Summer Sale - 50% Off",
-    cta: "Shop Now",
+    image: "/hero-4.jpg",
+    title: "Elevate Your Style",
+    subtitle:
+      "Discover the perfect blend of comfort and elegance with our exclusive Summer Collection 2026.",
+    cta: "Shop Products",
+    href: "/products",
   },
   {
     id: 2,
-    image: "/hero-2.jpg",
-    title: "Electronics Deals",
-    subtitle: "Latest Gadgets Up to 30% Off",
-    cta: "Explore",
+    image: "/hero-22.jpg",
+    title: "Fresh Drops Every Week",
+    subtitle:
+      "Stay ahead of the curve with our newest arrivals. From casual wear to formal essentials.",
+    cta: "View Brands",
+    href: "/brands",
   },
   {
     id: 3,
-    image: "/hero-3.jpg",
-    title: "Home & Garden",
-    subtitle: "Everything for Your Home",
-    cta: "View All",
+    image: "/hero-33.jpg",
+    title: "Customer Favorites",
+    subtitle:
+      "Join thousands of happy customers who love our best-selling pieces. Limited stock available.",
+    cta: "Explore Categories",
+    href: "/categories",
   },
 ];
 
-export function HeroSlider() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+export default function HeroSlider() {
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 8000);
+    return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  const goToSlide = (index: number) => setCurrentSlide(index);
-
-  const current = slides[currentSlide];
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="relative w-full min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] overflow-hidden bg-amber-700">
-      {/* Slides */}
-      <div className="absolute inset-0">
+    <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] overflow-hidden">
+      {" "}
+      <AnimatePresence mode="wait">
         <motion.div
-          key={currentSlide}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
-          transition={{ duration: 0.8 }}
-          className="w-full h-full relative"
+          key={slides[current].id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0 w-full h-full"
         >
-          <Image
-            src={current.image}
-            alt={current.title}
-            fill
-            className="object-cover brightness-90"
-            priority
-          />
+          <div className="relative w-full h-full">
+            {/* Background Image */}
+            <Image
+              src={slides[current].image}
+              alt={slides[current].title}
+              fill
+              className="object-cover object-center"
+            />
 
-          {/* Light Green Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-green-400/5 to-emerald-500/10" />
-        </motion.div>
-      </div>
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/20" />
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="max-w-4xl w-full"
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 leading-tight drop-shadow-2xl">
-            {current.title}
-          </h1>
-          <p className="text-lg md:text-xl lg:text-2xl mb-8 lg:mb-12 opacity-95 drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
-            {current.subtitle}
-          </p>
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link href="/products">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 sm:px-10 py-4 sm:py-5 bg-white/95 backdrop-blur-sm text-emerald-700 font-black text-lg sm:text-xl rounded-3xl shadow-2xl border border-white/50 hover:bg-white hover:shadow-3xl transition-all duration-300 min-w-[200px]"
+            {/* Inline SVG pattern overlay */}
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
+
+            {/* Content */}
+            <div className="absolute inset-0 flex flex-col justify-center items-start px-3 sm:px-6 md:px-12 lg:px-20 z-10">
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-1 sm:mb-2 leading-tight max-w-xs sm:max-w-sm md:max-w-lg"
               >
-                {current.cta}
-              </motion.button>
-            </Link>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 sm:px-10 py-4 sm:py-5 bg-white/20 backdrop-blur-sm text-white font-black text-lg sm:text-xl rounded-3xl shadow-xl border border-white/40 hover:bg-white/30 hover:shadow-2xl transition-all duration-300 min-w-[200px]"
-            >
-              Learn More
-            </motion.button>
-          </motion.div>
+                {slides[current].title}
+              </motion.h1>
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-lg"
+              >
+                {slides[current].subtitle}
+              </motion.p>
+              <Link href={slides[current].href}>
+                <motion.button
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.6 }}
+                  className="px-6 sm:px-8 md:px-10 py-2 sm:py-3 bg-green-600 text-white rounded-full hover:bg-green-700 shadow-xl hover:shadow-green-500/25 font-semibold text-xs sm:text-sm md:text-base transition-all duration-300"
+                >
+                  {slides[current].cta} →
+                </motion.button>
+              </Link>
+            </div>
+          </div>
         </motion.div>
-      </div>
-
-      {/* Navigation Arrows */}
+      </AnimatePresence>
+      {/* Navigation buttons with SVG arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group z-20"
+        className="absolute left-1 sm:left-3 md:left-5 top-1/2 -translate-y-1/2 text-white bg-white/20 backdrop-blur-md hover:bg-green-600 rounded-full w-8 sm:w-9 md:w-11 h-8 sm:h-9 md:h-11 flex items-center justify-center z-30"
+        aria-label="Previous slide"
       >
-        <FaChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
       </button>
-
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-full text-white hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl w-14 h-14 flex items-center justify-center group z-20"
+        className="absolute right-1 sm:right-3 md:right-5 top-1/2 -translate-y-1/2 text-white bg-white/20 backdrop-blur-md hover:bg-green-600 rounded-full w-8 sm:w-9 md:w-11 h-8 sm:h-9 md:h-11 flex items-center justify-center z-30"
+        aria-label="Next slide"
       >
-        <FaChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
       </button>
-
       {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
-        {slides.map((_, index) => (
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        {slides.map((_, idx) => (
           <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide
-                ? "bg-white scale-125 shadow-lg"
-                : "bg-white/50 hover:bg-white/70 hover:scale-110"
+            key={idx}
+            onClick={() => setCurrent(idx)}
+            className={`transition-all duration-300 cursor-pointer ${
+              current === idx
+                ? "w-8 h-2 bg-green-500 rounded-full"
+                : "w-2 h-2 bg-white/50 hover:bg-white/70 rounded-full"
             }`}
-          >
-            <FaCircle className="w-3 h-3 text-white opacity-0 pointer-events-none" />
-          </button>
+          />
         ))}
       </div>
-
-      {/* Progress Bar */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/30 rounded-full overflow-hidden z-20">
-        <motion.div
-          className="h-full bg-white rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        />
+      {/* Counter */}
+      <div className="absolute bottom-5 right-5 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs sm:text-sm md:text-sm z-30">
+        {current + 1} / {slides.length}
       </div>
-    </section>
+    </div>
   );
 }

@@ -32,21 +32,21 @@ export const BrandCard = ({ brand }: BrandCardProps) => {
           ) : (
             <FaStore className="text-gray-400 w-10 h-10" />
           )}
+        </div>
 
-          {/* Hover Text */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="flex items-center gap-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-green-600 text-sm font-semibold shadow">
+        {/* Brand Name and Hover Overlay */}
+        <div className="py-3 text-center relative">
+          <h3 className="text-sm md:text-base font-medium text-gray-700 line-clamp-1">
+            {safeBrand.name || "Brand"}
+          </h3>
+
+          {/* Overlay under title on hover */}
+          <div className="mt-2 opacity-0 group-hover:opacity-100 transition flex justify-center">
+            <div className="flex items-center gap-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-green-600 text-sm font-semibold shadow hover:scale-105 transition-transform duration-300 cursor-pointer">
               Show Products
               <FaArrowRight className="text-xs" />
             </div>
           </div>
-        </div>
-
-        {/* Brand Name */}
-        <div className="py-3 text-center">
-          <h3 className="text-sm md:text-base font-medium text-gray-700 line-clamp-1">
-            {safeBrand.name || "Brand"}
-          </h3>
         </div>
       </motion.div>
     </Link>

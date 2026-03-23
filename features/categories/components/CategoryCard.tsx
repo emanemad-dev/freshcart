@@ -32,18 +32,10 @@ export const CategoryCard = ({ category }: CategoryCardProps) => {
           ) : (
             <FaTags className="w-10 h-10 text-gray-400" />
           )}
-
-          {/* Overlay on Hover */}
-          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-            <span className="flex items-center gap-2 text-white font-semibold text-sm bg-emerald-600/90 px-4 py-2 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer">
-              View Subcategories
-              <FaArrowRight className="ml-1 animate-pulse" />
-            </span>
-          </div>
         </div>
 
         {/* Content Section */}
-        <div className="p-4 text-center">
+        <div className="p-4 text-center relative">
           <h3 className="font-semibold text-gray-800 text-base group-hover:text-emerald-600 transition line-clamp-1">
             {safeCategory.name || "Category"}
           </h3>
@@ -53,6 +45,14 @@ export const CategoryCard = ({ category }: CategoryCardProps) => {
               {safeCategory.description}
             </p>
           )}
+
+          {/* Overlay under title on hover */}
+          <div className="mt-2 opacity-0 group-hover:opacity-100 transition flex justify-center">
+            <span className="flex items-center gap-2 text-white font-semibold text-sm bg-emerald-600/90 px-4 py-2 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer">
+              View Subcategories
+              <FaArrowRight className="ml-1 animate-pulse" />
+            </span>
+          </div>
         </div>
       </motion.div>
     </Link>

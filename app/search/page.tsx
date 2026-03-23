@@ -189,16 +189,26 @@ function SearchContent() {
     }
   };
 
-  const clearFilters = () => {
-    const params = new URLSearchParams();
-    if (searchQuery) {
-      params.set("search", searchQuery);
-    }
-    router.push(`/search?${params.toString()}`);
-    setSelectedPrice("");
-    setMinPrice("");
-    setMaxPrice("");
-  };
+ const clearFilters = () => {
+   // 1. Reset all filter states
+   setSelectedPrice("");
+   setMinPrice("");
+   setMaxPrice("");
+
+   // 2. Reset categories and brands from URL
+   const params = new URLSearchParams();
+
+   // Optionally keep search query if present
+   if (searchQuery) {
+     params.set("search", searchQuery);
+   }
+
+   // Reset page to 1
+   params.set("page", "1");
+
+   // Update URL
+   router.push(`/search?${params.toString()}`);
+ };
 
   // Check if a category is selected
   const isCategorySelected = (catId: string) => categoryIds.includes(catId);
