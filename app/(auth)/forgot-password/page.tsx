@@ -265,7 +265,7 @@ export default function ForgotPasswordPage() {
                   <span className="font-semibold">{email}</span>
                 </p>
                 <Link
-                  href={`/verify-reset-code?email=\${encodeURIComponent(email)}`}
+                  href={`/verify-reset-code?email=${encodeURIComponent(email)}`}
                   className="inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all"
                 >
                   Continue Reset ✨

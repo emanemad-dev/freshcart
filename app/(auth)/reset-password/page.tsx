@@ -24,7 +24,8 @@ import {
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const emailParam = searchParams.get("email") || "";
+  const email = decodeURIComponent(emailParam.replace(/\\\$/g, "$")) || "";
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

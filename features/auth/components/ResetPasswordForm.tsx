@@ -9,7 +9,8 @@ import { authService } from "@/features/auth/api/auth.service";
 
 export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const emailParam = searchParams.get("email") || "";
+  const email = decodeURIComponent(emailParam.replace(/\\\$/g, "$")) || "";
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

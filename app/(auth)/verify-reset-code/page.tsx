@@ -24,7 +24,8 @@ import {
 
 export default function VerifyResetCodePage() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const emailParam = searchParams.get("email") || "";
+  const email = decodeURIComponent(emailParam.replace(/\\\$/g, "$")) || "";
 
   const [resetCode, setResetCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
@@ -37,7 +38,8 @@ export default function VerifyResetCodePage() {
     setError("");
 
     try {
-      await authService.verifyResetCode(resetCode);
+      const data = await authService.verifyResetCode(resetCode);
+      if (data.token) localStorage.setItem("resetToken", data.token);
       setIsVerified(true);
     } catch (err: unknown) {
       const errorMessage =
@@ -231,9 +233,13 @@ export default function VerifyResetCodePage() {
               <h2 className="text-2xl font-bold text-gray-800 mb-1">
                 Verify Code
               </h2>
+
               <p className="text-gray-500 text-sm mb-2">
-                Code sent to <span className="font-semibold">{email}</span>
+                A 6-digit verification code has been sent to{" "}
+                <span className="font-semibold">{email}</span>. Please check
+                your inbox.
               </p>
+
               <p className="text-xs text-gray-400">
                 Enter 6-digit verification code
               </p>
