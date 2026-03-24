@@ -1,7 +1,8 @@
 "use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
+import Link from "next/link";
+import { useState } from "react";
+import { authService } from "@/features/auth/api/auth.service";
 import {
   FaGoogle,
   FaFacebook,
@@ -13,29 +14,37 @@ import {
   FaEye,
   FaEyeSlash,
   FaUser,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 import {
   RiLeafFill,
   RiTruckFill,
   RiShieldCheckFill,
   RiSparklingFill,
-} from 'react-icons/ri';
+} from "react-icons/ri";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitted(true);
-    setIsLoading(false);
+    try {
+      await authService.forgotPassword(email);
+      setIsSubmitted(true);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to send reset email. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,19 +55,31 @@ export default function ForgotPasswordPage() {
         <div className="absolute top-20 left-10 w-16 h-16 opacity-20 animate-float">
           <span className="text-6xl">🥬</span>
         </div>
-        <div className="absolute top-40 right-20 w-14 h-14 opacity-15 animate-float" style={{ animationDelay: '0.5s' }}>
+        <div
+          className="absolute top-40 right-20 w-14 h-14 opacity-15 animate-float"
+          style={{ animationDelay: "0.5s" }}
+        >
           <span className="text-5xl">🍊</span>
         </div>
-        <div className="absolute bottom-32 left-1/4 w-12 h-12 opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+        <div
+          className="absolute bottom-32 left-1/4 w-12 h-12 opacity-20 animate-float"
+          style={{ animationDelay: "1s" }}
+        >
           <span className="text-4xl">🍎</span>
         </div>
-        <div className="absolute top-1/3 right-1/3 w-14 h-14 opacity-15 animate-float" style={{ animationDelay: '1.5s' }}>
+        <div
+          className="absolute top-1/3 right-1/3 w-14 h-14 opacity-15 animate-float"
+          style={{ animationDelay: "1.5s" }}
+        >
           <span className="text-5xl">🥕</span>
         </div>
-        <div className="absolute bottom-20 right-1/4 w-16 h-16 opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+        <div
+          className="absolute bottom-20 right-1/4 w-16 h-16 opacity-20 animate-float"
+          style={{ animationDelay: "2s" }}
+        >
           <span className="text-6xl">🍇</span>
         </div>
-        
+
         {/* Cute Dots Pattern */}
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-10 left-1/4 w-3 h-3 bg-green-300 rounded-full"></div>
@@ -98,7 +119,8 @@ export default function ForgotPasswordPage() {
           </h1>
 
           <p className="text-lg text-gray-600 mb-8 font-medium">
-            We help you get back to your account. Just enter your email and we'll send you a reset link 💌
+            We help you get back to your account. Just enter your email and
+            we'll send you a reset link 💌
           </p>
 
           {/* Cute Features */}
@@ -138,10 +160,16 @@ export default function ForgotPasswordPage() {
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-yellow-200 max-w-md shadow-lg">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-yellow-300">
-                <img src="https://www.loremfaces.net/96/id/3.jpg" alt="Customer" className="w-full h-full object-cover" />
+                <img
+                  src="https://www.loremfaces.net/96/id/3.jpg"
+                  alt="Customer"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
-                <span className="text-gray-900 font-bold block">Alex Smith</span>
+                <span className="text-gray-900 font-bold block">
+                  Alex Smith
+                </span>
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <FaStar key={i} className="text-yellow-400 text-xs" />
@@ -151,7 +179,8 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
             <p className="text-gray-700 italic text-sm leading-relaxed">
-              "Reset process was super easy! Got my account back in 2 minutes! 🚀"
+              "Reset process was super easy! Got my account back in 2 minutes!
+              🚀"
             </p>
           </div>
         </div>
@@ -163,7 +192,7 @@ export default function ForgotPasswordPage() {
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border-2 border-yellow-100 relative overflow-hidden">
             {/* Top decoration */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300"></div>
-            
+
             {/* Corner decorations */}
             <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
               <span className="text-yellow-500 text-sm">🔑</span>
@@ -228,12 +257,15 @@ export default function ForgotPasswordPage() {
 
             {isSubmitted && (
               <div className="mt-4 p-4 bg-green-50 border-2 border-green-200 rounded-xl text-center">
-                <h3 className="font-bold text-green-800 mb-2">Check Your Email!</h3>
+                <h3 className="font-bold text-green-800 mb-2">
+                  Check Your Email!
+                </h3>
                 <p className="text-green-700 text-sm mb-4">
-                  Reset code sent to <span className="font-semibold">{email}</span>
+                  Reset code sent to{" "}
+                  <span className="font-semibold">{email}</span>
                 </p>
                 <Link
-                  href="/verify-reset-code"
+                  href={`/verify-reset-code?email=\${encodeURIComponent(email)}`}
                   className="inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all"
                 >
                   Continue Reset ✨
@@ -243,11 +275,17 @@ export default function ForgotPasswordPage() {
 
             {/* Links */}
             <div className="flex items-center justify-center gap-4 mt-6 pt-6 border-t border-gray-100 text-sm">
-              <Link href="/login" className="text-green-500 font-semibold hover:text-green-600 flex items-center gap-1">
+              <Link
+                href="/login"
+                className="text-green-500 font-semibold hover:text-green-600 flex items-center gap-1"
+              >
                 <FaLock className="text-sm" />
                 Back to Login
               </Link>
-              <Link href="/register" className="text-orange-500 font-semibold hover:text-orange-600 flex items-center gap-1">
+              <Link
+                href="/register"
+                className="text-orange-500 font-semibold hover:text-orange-600 flex items-center gap-1"
+              >
                 <FaUser className="text-sm" />
                 Create Account
               </Link>
@@ -268,7 +306,7 @@ export default function ForgotPasswordPage() {
 
           <div className="text-center mt-4">
             <Link
-              href="/" 
+              href="/"
               className="text-gray-500 text-sm hover:text-yellow-500 transition-colors flex items-center justify-center gap-1"
             >
               <span>←</span>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { authService } from "@/features/auth/api/auth.service";
 import {
   FaGoogle,
   FaFacebook,
@@ -42,10 +43,18 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
     setError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSuccess(true);
-    setIsLoading(false);
+    try {
+      await authService.resetPassword({ email, newPassword });
+      setIsSuccess(true);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to reset password. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {
