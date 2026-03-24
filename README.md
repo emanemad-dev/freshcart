@@ -63,14 +63,6 @@
 | **Utils**            | Next/Image (remotePatterns), `useDebounce.ts`, `shared/lib/helpers.ts`, `routes.ts`                        |
 | **Backend**          | External API `https://ecommerce.routemisr.com/api/v1` (PHP/Laravel/MySQL)                                  |
 
-## 📸 Hero Images & Screenshots
-
-- ![Main Hero](public/hero-22.jpg)
-- ![Products](public/hero-33.jpg)
-- ![Login](public/login.png)
-- ![Logo](public/logo.png)
-- More: hero-3.jpg, hero-4.jpg, etc.
-
 ## 🚀 Local Setup
 
 ```bash
@@ -87,12 +79,6 @@ npm run lint  # Code quality
 - All in `package.json` (no extras).
 - Token: localStorage via Axios interceptor.
 - Images: Optimized from API domain.
-
-## 🚧 Recent Updates
-
-- Full auth flow w/ reset/verify.
-- All pages responsive w/ heroes.
-- See TODO-\*.md for ongoing.
 
 ## 👨‍💻 Developer Guide
 
