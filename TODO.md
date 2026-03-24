@@ -1,1 +1,0 @@
-# Fix onAddToCart ReferenceError\n\n## Plan Progress\n\n1. [x] Create TODO.md to track progress\n2. [ ] Fix destructuring in ProductMainSection.tsx\n3. [ ] Test Add to Cart button\n4. [ ] Complete task\n
