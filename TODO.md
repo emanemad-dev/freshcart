@@ -1,17 +1,11 @@
-# FreshCart Vercel Deployment Fix - useSearchParams Suspense Wrapper
+# Fix Next.js Build Error - Verify Reset Code Page
 
-## Completed Steps
+## Plan Steps:
 
-- [x] Analyzed error and identified affected files using search_files and read_file
-- [x] Created detailed edit plan and got user approval ("اتصرف" = proceed)
+- [x] 1. Create app/(auth)/verify-reset-code/VerifyResetCodeContent.tsx (moved content, default export, added router.push)
+- [x] 2. Update app/(auth)/verify-reset-code/page.tsx (Suspense wrapper matching reset-password)
+- [x] 3. Fix next.config.js (removed deprecated eslint config)
+- [ ] 4. Test `npm run build`
+- [ ] 5. Test functionality with `npm run dev`
 
-## Steps to Complete
-
-- [x] Step 1: Refactor app/(auth)/reset-password/page.tsx with Suspense wrapper
-- [ ] Step 2: Refactor app/(auth)/verify-reset-code/page.tsx with Suspense wrapper
-- [x] Step 3: Test with `npm run build`
-- [ ] Step 4: Commit changes and instruct Vercel redeploy
-
-## Current Status
-
-Ready to implement file edits per approved plan.
+**Status:** Starting implementation...
