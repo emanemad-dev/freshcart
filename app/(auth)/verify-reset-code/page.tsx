@@ -22,7 +22,7 @@ import {
   RiSparklingFill,
 } from "react-icons/ri";
 
-export default function VerifyResetCodePage() {
+export function VerifyResetCodeContent() {
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") || "";
   const email = decodeURIComponent(emailParam.replace(/\\\$/g, "$")) || "";

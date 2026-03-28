@@ -1,12 +1,17 @@
-# FreshCart README Enhancement TODO - ✅ COMPLETE (Detailed Version)
+# FreshCart Vercel Deployment Fix - useSearchParams Suspense Wrapper
 
-## Previous Steps: ✅ Complete
+## Completed Steps
 
-## New Steps (Detailed Expansion):
+- [x] Analyzed error and identified affected files using search_files and read_file
+- [x] Created detailed edit plan and got user approval ("اتصرف" = proceed)
 
-- [x] 1. Update TODO.md for v2 ✅
-- [x] 2. Expand README.md: Detailed pages table, all features/components/hooks/services, full tools w/ versions ✅
-- [x] 3. Update TODO.md post-edit ✅
-- [x] 4. Final completion ✅
+## Steps to Complete
 
-**Status**: README.md now includes **everything** - all pages/routes, detailed features/components/hooks/services, complete tech stack/versions. Comprehensive for GitHub!
+- [x] Step 1: Refactor app/(auth)/reset-password/page.tsx with Suspense wrapper
+- [ ] Step 2: Refactor app/(auth)/verify-reset-code/page.tsx with Suspense wrapper
+- [x] Step 3: Test with `npm run build`
+- [ ] Step 4: Commit changes and instruct Vercel redeploy
+
+## Current Status
+
+Ready to implement file edits per approved plan.
