@@ -7,7 +7,11 @@
 
 **FreshCart** - Complete E-Commerce Platform. Full-featured online store with authentication, product catalog, cart, checkout, orders, and more. Built with modern stack, responsive design, animations, and optimized performance.
 
-🌐 **Live Demo:** [https://freshcart-rose.vercel.app](https://freshcart-rose.vercel.app)
+🌐 **Live Demo:** <p align="center">
+  <a href="https://freshcart-rose.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Visit-blue?style=for-the-badge&logo=appveyor" alt="Live Demo">
+  </a>
+</p>
 
 ## 📱 All Pages & Routes (Complete List)
 
